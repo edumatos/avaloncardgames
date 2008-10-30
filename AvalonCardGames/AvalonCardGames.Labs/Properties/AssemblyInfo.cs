@@ -39,8 +39,8 @@ using ScriptCoreLib;
 
 [assembly:
 	Script,
-	ScriptTypeFilter(ScriptType.ActionScript, "*.Shared"),
-	ScriptTypeFilter(ScriptType.ActionScript, "*.ActionScript"),
-	ScriptTypeFilter(ScriptType.JavaScript, "*.Shared"),
-	ScriptTypeFilter(ScriptType.JavaScript, "*.JavaScript"),
+	ScriptTypeFilter(ScriptType.ActionScript, "AvalonCardGames.Labs.Shared"),
+	ScriptTypeFilter(ScriptType.ActionScript, "AvalonCardGames.Labs.ActionScript"),
+	ScriptTypeFilter(ScriptType.JavaScript, "AvalonCardGames.Labs.Shared"),
+	ScriptTypeFilter(ScriptType.JavaScript, "AvalonCardGames.Labs.JavaScript"),
 ]
