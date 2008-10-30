@@ -37,26 +37,7 @@ namespace AvalonCardGames.Labs.Shared
 
 			// step 1 - can we show a card?
 
-			{
-				var card = new CardInfo(CardInfo.SuitEnum.Heart, CardInfo.RankEnum.Rank5)
-				{
-					IsBlackDeck = true
-				};
 
-				card.ToImage().AttachTo(this);
-			}
-
-			{
-				var card = new CardInfo(CardInfo.SuitEnum.Heart, CardInfo.RankEnum.Rank5)
-				{
-					Visible = true
-				};
-
-				card.ToImage().AttachTo(this).MoveTo(
-					CardInfo.Width, 0);
-
-				
-			}
 
 			// step 2 drag the cards around
 
@@ -80,15 +61,67 @@ namespace AvalonCardGames.Labs.Shared
 					{
 						Visible = true
 					}
-				);
+				)
+				{
+					AnimatedOpacity = 1
+				};
 
 				card.Container.AttachTo(this).MoveTo(
 					CardInfo.Width * 3, 0);
 
+				card.Container.MouseEnter +=
+					delegate
+					{
+						card.AnimatedOpacity = 0.5;
+					};
+
+
+				card.Container.MouseLeave +=
+					delegate
+					{
+						card.AnimatedOpacity = 1;
+					};
+
 				new DragHelper(card.Container, this);
 			}
 
-			
+			{
+				var card = new Card(null,
+					new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.RankAce)
+					{
+						Visible = true
+					}
+				)
+				{
+					AnimatedOpacity = 1,
+					VisibleSide = Card.SideEnum.BackSide
+				};
+
+				card.Container.AttachTo(this).MoveTo(
+					CardInfo.Width * 4, 0);
+
+				card.Container.MouseEnter +=
+					delegate
+					{
+						card.AnimatedOpacity = 0.5;
+					};
+
+
+				card.Container.MouseLeave +=
+					delegate
+					{
+						card.AnimatedOpacity = 1;
+					};
+
+				new DragHelper(card.Container, this);
+			}
+
+			{
+				var s = new CardStack
+				{
+
+				}.AttachContainerTo(this);
+			}
 			// step 3 drag cards from stack to stack
 		}
 	}
