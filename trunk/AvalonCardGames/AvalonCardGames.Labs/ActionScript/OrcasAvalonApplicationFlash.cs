@@ -47,6 +47,9 @@ namespace AvalonCardGames.Labs.ActionScript
 			// assets from current assembly
 			Handlers.Add(e => ByFileName(e));
 
+			global::ScriptCoreLib.ActionScript.Avalon.Cards.KnownEmbeddedAssets.RegisterTo(Handlers);
+
+
 			//// assets from referenced assemblies
 			//Handlers.Add(e => global::ScriptCoreLib.ActionScript.Avalon.Cursors.EmbeddedAssets.Default[e]);
 			//Handlers.Add(e => global::ScriptCoreLib.ActionScript.Avalon.TiledImageButton.Assets.Default[e]);
