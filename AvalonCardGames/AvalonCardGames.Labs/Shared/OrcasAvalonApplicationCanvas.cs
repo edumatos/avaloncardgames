@@ -24,7 +24,11 @@ namespace AvalonCardGames.Labs.Shared
 			Width = DefaultWidth;
 			Height = DefaultHeight;
 
-			Colors.Blue.ToGradient(Colors.Red, DefaultHeight / 4).Select(
+			new [] {
+				Colors.Black,
+				Colors.Green,
+				Colors.Black
+			}.ToGradient( DefaultHeight / 4).Select(
 				(c, i) =>
 					new Rectangle
 					{
@@ -36,10 +40,51 @@ namespace AvalonCardGames.Labs.Shared
 
 
 			// step 1 - can we show a card?
-
-
-
 			// step 2 drag the cards around
+
+			var deck = new CardDeck { Container = this };
+
+			var PlayStack = deck.CreateStackList();
+
+			{
+				PlayStack.Add(
+					new CardStack
+					{
+
+					}.MoveContainerTo(64, 64).AttachContainerTo(this)
+				);
+
+				PlayStack.Add(
+					new CardStack
+					{
+
+					}.MoveContainerTo(64 + CardInfo.Width, 64).AttachContainerTo(this)
+				);
+
+				PlayStack.Add(
+					new CardStack
+					{
+						new Card(null,
+							new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.Rank9)
+							{
+								Visible = false
+							}
+						)
+						{
+							AnimatedOpacity = 1
+						},
+						new Card(null,
+							new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.Rank10)
+							{
+								Visible = true
+							}
+						)
+						{
+							AnimatedOpacity = 1
+						}
+					}.MoveTo(64 + CardInfo.Width * 2, 64).AttachContainerTo(this).Update()
+				);
+			}
 
 			{
 				var card = new Card(null,
@@ -116,12 +161,7 @@ namespace AvalonCardGames.Labs.Shared
 				new DragHelper(card.Container, this);
 			}
 
-			{
-				var s = new CardStack
-				{
-
-				}.AttachContainerTo(this);
-			}
+			
 			// step 3 drag cards from stack to stack
 		}
 	}
@@ -143,6 +183,8 @@ namespace AvalonCardGames.Labs.Shared
 
 					Target.Orphanize();
 					Target.AttachTo(Container);
+
+					args.Handled = true;
 				};
 
 			Container.MouseMove +=
