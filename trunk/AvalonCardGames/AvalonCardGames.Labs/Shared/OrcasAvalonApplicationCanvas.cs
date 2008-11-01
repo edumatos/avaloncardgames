@@ -2,33 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Controls;
-using ScriptCoreLib;
-using ScriptCoreLib.Shared.Avalon.Extensions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Extensions;
+using ScriptCoreLib.Shared.Lambda;
 
 namespace AvalonCardGames.Labs.Shared
 {
 	[Script]
 	public class OrcasAvalonApplicationCanvas : Canvas
 	{
-		public const int DefaultWidth = 480;
-		public const int DefaultHeight = 320;
+		public const int DefaultWidth = 600;
+		public const int DefaultHeight = 400;
 
 		public OrcasAvalonApplicationCanvas()
 		{
 			Width = DefaultWidth;
 			Height = DefaultHeight;
 
-			new [] {
+			new[] {
 				Colors.Black,
 				Colors.Green,
 				Colors.Black
-			}.ToGradient( DefaultHeight / 4).Select(
+			}.ToGradient(DefaultHeight / 4).Select(
 				(c, i) =>
 					new Rectangle
 					{
@@ -42,7 +42,12 @@ namespace AvalonCardGames.Labs.Shared
 			// step 1 - can we show a card?
 			// step 2 drag the cards around
 
-			var deck = new CardDeck { Container = this };
+			var deck = new CardDeck().AttachContainerTo(this);
+
+			deck.SizeTo(DefaultWidth, DefaultHeight);
+
+			deck.UnusedCards.AddRange(CardInfo.FullDeck());
+
 
 			var PlayStack = deck.CreateStackList();
 
@@ -51,161 +56,61 @@ namespace AvalonCardGames.Labs.Shared
 					new CardStack
 					{
 
-					}.MoveContainerTo(64, 64).AttachContainerTo(this)
+					}.MoveContainerTo(64, 64)
 				);
 
 				PlayStack.Add(
 					new CardStack
 					{
 
-					}.MoveContainerTo(64 + CardInfo.Width, 64).AttachContainerTo(this)
+					}.MoveContainerTo(64 + CardInfo.Width, 64)
+				);
+
+				var s3 =
+					new CardStack
+					{
+						deck.FetchCard,
+						deck.FetchCard,
+						deck.FetchCard,
+					}.MoveTo(64 + CardInfo.Width * 2, 64);
+
+				PlayStack.Add(s3);
+
+				s3.RevealLastCard();
+			}
+
+
+			{
+				PlayStack.Add(
+					new CardStack
+					{
+
+					}.MoveContainerTo(64, 264)
 				);
 
 				PlayStack.Add(
 					new CardStack
 					{
-						new Card(null,
-							new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.Rank9)
-							{
-								Visible = false
-							}
-						)
-						{
-							AnimatedOpacity = 1
-						},
-						new Card(null,
-							new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.Rank10)
-							{
-								Visible = true
-							}
-						)
-						{
-							AnimatedOpacity = 1
-						}
-					}.MoveTo(64 + CardInfo.Width * 2, 64).AttachContainerTo(this).Update()
-				);
-			}
 
-			{
-				var card = new Card(null,
-					new CardInfo(CardInfo.SuitEnum.Heart, CardInfo.RankEnum.Rank9)
-					{
-						Visible = true
-					}
+					}.MoveContainerTo(64 + CardInfo.Width, 264)
 				);
 
-				card.Container.AttachTo(this).MoveTo(
-					CardInfo.Width * 2, 0);
+				var s3 =
+					new CardStack
+					{
+						deck.FetchCard,
+						deck.FetchCard,
+						deck.FetchCard,
+					}.MoveTo(64 + CardInfo.Width * 2, 264);
 
-				new DragHelper(card.Container, this);
+				PlayStack.Add(s3);
+
+				s3.RevealLastCard();
 			}
 
-			{
-				var card = new Card(null,
-					new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.Rank9)
-					{
-						Visible = true
-					}
-				)
-				{
-					AnimatedOpacity = 1
-				};
-
-				card.Container.AttachTo(this).MoveTo(
-					CardInfo.Width * 3, 0);
-
-				card.Container.MouseEnter +=
-					delegate
-					{
-						card.AnimatedOpacity = 0.5;
-					};
-
-
-				card.Container.MouseLeave +=
-					delegate
-					{
-						card.AnimatedOpacity = 1;
-					};
-
-				new DragHelper(card.Container, this);
-			}
-
-			{
-				var card = new Card(null,
-					new CardInfo(CardInfo.SuitEnum.Spade, CardInfo.RankEnum.RankAce)
-					{
-						Visible = true
-					}
-				)
-				{
-					AnimatedOpacity = 1,
-					VisibleSide = Card.SideEnum.BackSide
-				};
-
-				card.Container.AttachTo(this).MoveTo(
-					CardInfo.Width * 4, 0);
-
-				card.Container.MouseEnter +=
-					delegate
-					{
-						card.AnimatedOpacity = 0.5;
-					};
-
-
-				card.Container.MouseLeave +=
-					delegate
-					{
-						card.AnimatedOpacity = 1;
-					};
-
-				new DragHelper(card.Container, this);
-			}
-
-			
 			// step 3 drag cards from stack to stack
 		}
 	}
 
-	[Script]
-	public class DragHelper
-	{
-		public DragHelper(FrameworkElement Target, Canvas Container)
-		{
-
-			var offset = new Point();
-			var drag = false;
-
-			Target.MouseLeftButtonDown +=
-				(sender, args) =>
-				{
-					offset = args.GetPosition(Target);
-					drag = true;
-
-					Target.Orphanize();
-					Target.AttachTo(Container);
-
-					args.Handled = true;
-				};
-
-			Container.MouseMove +=
-				(sender, args) =>
-				{
-					if (drag)
-					{
-						var p = args.GetPosition(Container) - offset;
-
-
-						Target.MoveTo(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
-					}
-				};
-
-			Container.MouseLeftButtonUp +=
-				delegate
-				{
-					drag = false;
-
-				};
-		}
-	}
 }
 
