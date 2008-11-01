@@ -249,13 +249,140 @@ namespace AvalonCardGames.Spider.Shared
 				var s = new CardStack { MyDeck.FetchCards(10) };
 
 				DealStacks.Add(
-					s.MoveTo(Convert.ToInt32( dealpoint.X), Convert.ToInt32( dealpoint.Y))
+					s.MoveTo(Convert.ToInt32(dealpoint.X), Convert.ToInt32(dealpoint.Y))
 				);
 
 				dealpoint.X -= 10;
 			}
 
-			DeadStacks.Add(new CardStack().MoveTo(Margin, Convert.ToInt32( dealpoint.Y)));
+			DeadStacks.Add(new CardStack().MoveTo(Margin, Convert.ToInt32(dealpoint.Y)));
+
+
+
+			DealRow(
+				delegate
+				{
+
+					//MyStatus.Ready = true;
+					//MyStatus.Score = 500;
+					//MyStatus.Moves = 0;
+					//MyStatus.Visible = true;
+					//MyStatus.Update();
+				}
+			);
 		}
+
+
+		public void DealRow(Action done)
+		{
+
+			var DealingStack = DealStacks.LastOrDefault();
+
+			if (DealingStack == null)
+			{
+				System.Console.WriteLine("whoops, no more stacks left, but a click was made?");
+
+				return;
+			}
+
+			DealStacks.Remove(DealingStack);
+
+			// correct translation?
+			if (PlayStacks.Any(t => t.Cards.Count == 0))
+			{
+				// ??
+				System.Console.WriteLine("no move found!");
+
+				//this.MySounds.PlaySoundNoMoveFound();
+
+				return;
+			}
+
+			//MyStatus.Ready = false;
+
+			System.Console.WriteLine("dealing new row of cards...");
+
+			//Console.Log("deal last stack of " + DealingStack.Cards.Count + " to " + PlayStacks.Count + " stacks");
+
+			if (DealingStack.Cards.Count == PlayStacks.Count)
+			{
+				// AddScore(- PlayStacks.Count);
+
+				var ToBeAnimated = new Queue<Card>();
+
+				foreach (CardStack v in PlayStacks)
+				{
+					var c = DealingStack.Cards.Last();
+
+					c.VisibleSide = Card.SideEnum.TopSide;
+					//c.Enabled = true;
+					//c.Drag.Enabled = false;
+
+					// could  be rewritten?
+
+					c.AttachToStack(v);
+
+
+					ToBeAnimated.Enqueue(c);
+
+				}
+
+				System.Console.WriteLine("reordering cards, and animating...");
+
+				ToBeAnimated.ForEachReversed((c) => c.BringToFront());
+
+				//Console.Log("cards to be animated: " + ToBeAnimated.Count);
+
+				Action NextCard = null;
+
+				NextCard =
+					delegate
+					{
+						if (ToBeAnimated.Count > 0)
+						{
+							var c = ToBeAnimated.Dequeue();
+
+							//MySounds.PlaySoundDeal();
+
+							c.AnimatedMoveTo(
+
+								Convert.ToInt32(c.LocationInStack.X),
+								Convert.ToInt32(c.LocationInStack.Y)
+
+								);
+
+
+							//delegate
+							//{
+							//    c.Drag.Enabled = true;
+							//    CheckForGoodSuit(c.CurrentStack);
+
+							if (ToBeAnimated.Count == 0)
+							{
+								DealingStack.Container.Hide();
+
+								//MyStatus.Ready = true;
+
+								System.Console.WriteLine("done...");
+
+								done();
+								//Helper.Invoke(done);
+							}
+							else
+							{
+								300.AtDelay(NextCard);
+							}
+							//});
+						}
+
+
+					};
+
+				NextCard();
+
+			}
+		}
+
+
 	}
 }
