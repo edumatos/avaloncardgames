@@ -56,14 +56,14 @@ namespace AvalonCardGames.Labs.Shared
 					new CardStack
 					{
 
-					}.MoveContainerTo(64, 64)
+					}.MoveTo(64, 64)
 				);
 
 				PlayStack.Add(
 					new CardStack
 					{
 
-					}.MoveContainerTo(64 + CardInfo.Width, 64)
+					}.MoveTo(64 + CardInfo.Width, 64)
 				);
 
 				var s3 =
@@ -76,7 +76,7 @@ namespace AvalonCardGames.Labs.Shared
 
 				PlayStack.Add(s3);
 
-				s3.RevealLastCard();
+				s3.ForEach(k => k.VisibleSide = Card.SideEnum.TopSide);
 			}
 
 
@@ -85,14 +85,14 @@ namespace AvalonCardGames.Labs.Shared
 					new CardStack
 					{
 
-					}.MoveContainerTo(64, 264)
+					}.MoveTo(64, 264)
 				);
 
 				PlayStack.Add(
 					new CardStack
 					{
 
-					}.MoveContainerTo(64 + CardInfo.Width, 264)
+					}.MoveTo(64 + CardInfo.Width, 264)
 				);
 
 				var s3 =
