@@ -20,7 +20,21 @@ namespace AvalonCardGames.Spider.ActionScript
 		public SpiderFlash()
 		{
 			// spawn the wpf control
-			AvalonExtensions.AttachToContainer(new TargetCanvas(), this);
+			var c = new TargetCanvas();
+
+			Func<string, Class> f =
+				e =>  KnownEmbeddedResources.Default[ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.Sounds + "/" + e + ".mp3"];
+
+			var deal = f("deal");
+			var click = f("click");
+			var drag = f("drag");
+
+			c.MyDeck.Sounds.deal = () => deal.ToSoundAsset().play();
+			c.MyDeck.Sounds.click = () => click.ToSoundAsset().play();
+			c.MyDeck.Sounds.drag = () => drag.ToSoundAsset().play();
+
+
+			AvalonExtensions.AttachToContainer(c, this);
 		}
 
 		static SpiderFlash()

@@ -16,13 +16,13 @@ using ScriptCoreLib.Shared.Lambda;
 namespace AvalonCardGames.Spider.Shared
 {
 	[Script]
-	public class SpiderCanvas : Canvas
+	public partial class SpiderCanvas : Canvas
 	{
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
 
-		CardDeck MyDeck = new CardDeck
+		public CardDeck MyDeck = new CardDeck
 		{
 		};
 
@@ -59,25 +59,8 @@ namespace AvalonCardGames.Spider.Shared
 		#endregion
 
 
-		public enum SpiderRankEnum
-		{
-			Unknown,
 
-			RankKing,
-			RankQueen,
-			RankJack,
-			Rank10,
-			Rank9,
-			Rank8,
-			Rank7,
-			Rank6,
-			Rank5,
-			Rank4,
-			Rank3,
-			Rank2,
-			RankAce,
-
-		}
+		public Sounds Sounds = new Sounds();
 
 		public SpiderCanvas()
 		{
@@ -96,7 +79,8 @@ namespace AvalonCardGames.Spider.Shared
 			// add autoscroll ?
 			this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);
 			this.MyDeck.AttachContainerTo(this);
-
+			this.MyDeck.GetRank = e => (int)RankMapping[e];
+			this.MyDeck.CardCustomBackground = KnownAssets.Path.DefaultCards + "/spider.png";
 
 			System.Console.WriteLine("--- spider ---");
 
@@ -126,7 +110,6 @@ namespace AvalonCardGames.Spider.Shared
 					{
 						var s = PlayStacks[args.NewIndex];
 
-						//s.SetBackground(MyDeck.GfxPath + "/spider.empty.png");
 
 					}
 				};
@@ -156,6 +139,45 @@ namespace AvalonCardGames.Spider.Shared
 				};
 
 
+			#region drag rules
+			MyDeck.ApplyCardRules += delegate(Card c)
+			{
+				c.ValidateDragStart +=
+					delegate
+					{
+						var Rank = c.Rank;
+
+						return c.StackedCards.All(
+							k =>
+							{
+								Rank++;
+
+								return k.Rank == Rank;
+							}
+						);
+					};
+
+				c.ValidateDragStop +=
+					CandidateStack =>
+					{
+						if (PlayStacks.Contains(CandidateStack))
+						{
+							if (CandidateStack.Cards.Count == 0)
+								return true;
+
+							var CandidateRank = CandidateStack.Last().Rank;
+
+							if (c.Rank == CandidateRank + 1)
+								return true;
+
+							return false;
+						}
+
+						return false;
+					};
+			};
+
+			#endregion
 
 			System.Console.WriteLine("creating playstack... ");
 
@@ -221,20 +243,20 @@ namespace AvalonCardGames.Spider.Shared
 						s.CardMargin = new Vector { Y = 0, X = 0 };
 						s.Update();
 
-						//s.Click +=
-						//    delegate
-						//    {
-						//        if (DealStacks.Contains(s))
-						//        {
-						//            if (MyStatus.Ready)
-						//                DealRow(null);
-						//        }
-						//        else
-						//        {
-						//            System.Console.WriteLine("whoops wrong stack click ");
+						s.Click +=
+							delegate
+							{
+								if (DealStacks.Contains(s))
+								{
+									//if (MyStatus.Ready)
+									DealRow(null);
+								}
+								else
+								{
+									System.Console.WriteLine("whoops wrong stack click ");
 
-						//        }
-						//    };
+								}
+							};
 					}
 				};
 
@@ -327,6 +349,8 @@ namespace AvalonCardGames.Spider.Shared
 
 					c.AttachToStack(v);
 
+					c.Overlay.Orphanize();
+					c.Overlay.AttachTo(c.CurrentDeck.Overlay);
 
 					ToBeAnimated.Enqueue(c);
 
@@ -336,7 +360,7 @@ namespace AvalonCardGames.Spider.Shared
 
 				ToBeAnimated.ForEachReversed((c) => c.BringToFront());
 
-				//Console.Log("cards to be animated: " + ToBeAnimated.Count);
+				Console.WriteLine("cards to be animated: " + ToBeAnimated.Count);
 
 				Action NextCard = null;
 
@@ -346,6 +370,8 @@ namespace AvalonCardGames.Spider.Shared
 						if (ToBeAnimated.Count > 0)
 						{
 							var c = ToBeAnimated.Dequeue();
+
+							this.MyDeck.Sounds.deal();
 
 							//MySounds.PlaySoundDeal();
 
@@ -371,7 +397,8 @@ namespace AvalonCardGames.Spider.Shared
 
 								System.Console.WriteLine("done...");
 
-								done();
+								if (done != null)
+									done();
 								//Helper.Invoke(done);
 							}
 							else

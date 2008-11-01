@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpiderCanvas.RankMapping.cs" />
     <Compile Include="SpiderFlash.cs" />
     <Compile Include="SpiderDocument.cs" />
     <Compile Include="Program.cs" />
