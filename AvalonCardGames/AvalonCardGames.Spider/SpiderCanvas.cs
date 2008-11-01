@@ -241,7 +241,11 @@ namespace AvalonCardGames.Spider.Shared
 
 			System.Console.WriteLine("creating dealstack... ");
 
-			var dealpoint = new Point(DefaultWidth - CardInfo.Width - Margin, DefaultHeight - CardInfo.Height - Margin);
+			var dealpoint = new Point
+			{
+				X = DefaultWidth - CardInfo.Width - Margin,
+				Y = DefaultHeight - CardInfo.Height - Margin
+			};
 
 
 			while (MyDeck.UnusedCards.Count > 0)
@@ -255,6 +259,7 @@ namespace AvalonCardGames.Spider.Shared
 				dealpoint.X -= 10;
 			}
 
+			// we will collect cards here
 			DeadStacks.Add(new CardStack().MoveTo(Margin, Convert.ToInt32(dealpoint.Y)));
 
 
@@ -344,11 +349,12 @@ namespace AvalonCardGames.Spider.Shared
 
 							//MySounds.PlaySoundDeal();
 
+							var p = c.LocationInStack;
+
 							c.AnimatedMoveTo(
 
-								Convert.ToInt32(c.LocationInStack.X),
-								Convert.ToInt32(c.LocationInStack.Y)
-
+								Convert.ToInt32(p.X),
+								Convert.ToInt32(p.Y)
 								);
 
 
