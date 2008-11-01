@@ -5,16 +5,20 @@ using System.Text;
 using ScriptCoreLib;
 using ScriptCoreLib.JavaScript.Extensions;
 using ScriptCoreLib.JavaScript.DOM.HTML;
+using ScriptCoreLib.JavaScript;
 
 namespace AvalonCardGames.Solitare.JavaScript
 {
 	using TargetCanvas = global::AvalonCardGames.Solitare.Shared.SolitareCanvas;
+	using ScriptCoreLib.Shared.Drawing;
 
 	[Script, ScriptApplicationEntryPoint]
 	public class SolitareDocument
 	{
 		public SolitareDocument(IHTMLElement e)
 		{
+			Native.Document.body.style.backgroundColor = Color.Black;
+
 			// wpf here
 			var clip = new IHTMLDiv();
 
@@ -22,12 +26,14 @@ namespace AvalonCardGames.Solitare.JavaScript
 			clip.style.SetSize(TargetCanvas.DefaultWidth, TargetCanvas.DefaultHeight);
 			clip.style.overflow = ScriptCoreLib.JavaScript.DOM.IStyle.OverflowEnum.hidden;
 
-			if (e == null)
-				clip.AttachToDocument();
-			else
-				e.insertPreviousSibling(clip);
+			var c = new IHTMLElement(IHTMLElement.HTMLElementEnum.center, clip);
 
-			AvalonExtensions.AttachToContainer(new TargetCanvas(), clip);
+			if (e == null)
+				c.AttachToDocument();
+			else
+				e.insertPreviousSibling(c);
+
+			new TargetCanvas().AttachToContainer(clip);
 
 		}
 

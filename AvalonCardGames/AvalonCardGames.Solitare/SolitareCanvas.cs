@@ -8,29 +8,28 @@ using ScriptCoreLib.Shared.Avalon.Extensions;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ScriptCoreLib.Shared.Avalon.Controls;
+using ScriptCoreLib.Shared.Avalon.Cards;
 
 namespace AvalonCardGames.Solitare.Shared
 {
 	[Script]
 	public class SolitareCanvas : Canvas
 	{
-		public const int DefaultWidth = 480;
-		public const int DefaultHeight = 320;
+		public const int DefaultWidth = 600;
+		public const int DefaultHeight = 600;
 
 		public SolitareCanvas()
 		{
 			Width = DefaultWidth;
 			Height = DefaultHeight;
 
-			Colors.Blue.ToGradient(Colors.Red, DefaultHeight / 4).Select(
-				(c, i) =>
-					new Rectangle
-					{
-						Fill = new SolidColorBrush(c),
-						Width = DefaultWidth,
-						Height = 4,
-					}.MoveTo(0, i * 4).AttachTo(this)
-			).ToArray();
+
+			new TiledBackgroundImage(
+				(KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
+					64, 64,
+					10, 10
+			).AttachContainerTo(this);
 
 
 

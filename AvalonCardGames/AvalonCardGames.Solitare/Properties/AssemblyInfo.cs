@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using ScriptCoreLib;
 
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -39,8 +40,8 @@ using ScriptCoreLib;
 
 [assembly:
 	Script,
-	ScriptTypeFilter(ScriptType.ActionScript, "*.Shared"),
-	ScriptTypeFilter(ScriptType.ActionScript, "*.ActionScript"),
-	ScriptTypeFilter(ScriptType.JavaScript, "*.Shared"),
-	ScriptTypeFilter(ScriptType.JavaScript, "*.JavaScript"),
+	ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Solitare.Shared.SolitareCanvas)),
+	ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Solitare.ActionScript.SolitareFlash)),
+	ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Solitare.Shared.SolitareCanvas)),
+	ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Solitare.JavaScript.SolitareDocument)),
 ]
