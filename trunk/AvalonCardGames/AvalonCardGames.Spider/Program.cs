@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using AvalonCardGames.Spider.Shared;
 using ScriptCoreLib.CSharp.Avalon.Extensions;
+using System.IO;
+using System.Threading;
 
 namespace AvalonCardGames.Spider
 {
@@ -16,7 +18,9 @@ namespace AvalonCardGames.Spider
 		[STAThread]
 		static public void Main(string[] args)
 		{
-			new SpiderCanvas().ToWindow().ShowDialog();
+			var c = new SpiderCanvas();
+
+			c.ToWindow().ShowDialog();
 		}
 	}
 }
