@@ -15,7 +15,7 @@ namespace AvalonCardGames.Spider.ActionScript
 	/// </summary>
 	[Script, ScriptApplicationEntryPoint(Width = TargetCanvas.DefaultWidth, Height = TargetCanvas.DefaultHeight)]
 	[SWF(width = TargetCanvas.DefaultWidth, height = TargetCanvas.DefaultHeight, backgroundColor = 0)]
-	public class SpiderFlash : Sprite
+	public partial class SpiderFlash : Sprite
 	{
 		public string _mochiads_game_id = "0d4494ec8fcc8cd1";
 

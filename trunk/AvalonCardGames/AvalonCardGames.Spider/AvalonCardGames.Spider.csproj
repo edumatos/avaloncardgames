@@ -77,6 +77,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Info.cs" />
+    <Compile Include="SpiderFlash.GoogleGadget.cs" />
     <Compile Include="SpiderGame.cs" />
     <Compile Include="KnownAssets.cs" />
     <Compile Include="SpiderGame.DealRow.cs" />
@@ -113,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\jsc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\plus_google.png" />
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\su.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

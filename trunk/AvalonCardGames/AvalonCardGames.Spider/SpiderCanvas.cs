@@ -12,6 +12,7 @@ using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
+using System.Windows.Input;
 
 namespace AvalonCardGames.Spider.Shared
 {
@@ -82,12 +83,26 @@ namespace AvalonCardGames.Spider.Shared
 			}
 			).ToArray();
 
+			Colors.Black.ToTransparentGradient(ShadowHeight).Select(
+			(c, i) =>
+			{
+				return new Rectangle
+				{
+					Fill = new SolidColorBrush(c),
+					Width = Width,
+					Height = 1,
+					Opacity = c.A / 2 / 255.0
+				}.MoveTo(0, DefaultHeight - i - 1).AttachTo(this);
+			}
+			).ToArray();
+
+			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
 			new Image
 			{
 				Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
 				Width = 96,
 				Height = 96
-			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
+			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96 - 17 - Margin).AttachTo(this);
 
 			var Content = new Canvas
 			{
@@ -135,6 +150,58 @@ namespace AvalonCardGames.Spider.Shared
 
 			Menu.Show();
 
+			Action<Image, string> ToLink =
+				(img, href) =>
+				{
+					var r = new Rectangle
+					{
+						Fill = Brushes.Black,
+						Width = img.Width,
+						Height = img.Height,
+						Opacity = 0,
+						Cursor = Cursors.Hand
+					}.AttachTo(this).MoveTo(img, new Vector());
+
+					r.MouseEnter +=
+						delegate
+						{
+							img.Opacity = 0.5;
+						};
+
+					r.MouseLeave +=
+						delegate
+						{
+							img.Opacity = 1;
+						};
+
+					var uri = new Uri(href);
+
+					r.MouseLeftButtonUp +=
+						delegate
+						{
+							uri.NavigateTo(this);
+						};
+				};
+
+			ToLink(
+				new Image
+				{
+					Source = (KnownAssets.Path.Assets + "/plus_google.png").ToSource(),
+					Width = 62,
+					Height = 17
+				}.AttachTo(this).MoveTo(Margin, DefaultHeight - Margin - 17),
+				Info.GoogleGadgetAddLink
+			);
+
+			ToLink(
+				new Image
+				{
+					Source = (KnownAssets.Path.Assets + "/su.png").ToSource(),
+					Width = 16,
+					Height = 16
+				}.AttachTo(this).MoveTo(Margin + Margin + 62, DefaultHeight - Margin - 17),
+				 "http://www.stumbleupon.com/submit?url=" + Info.URL
+			);
 		}
 
 
