@@ -29,9 +29,9 @@ namespace AvalonCardGames.Spider.ActionScript
 			var click = f("click");
 			var drag = f("drag");
 
-			c.MyDeck.Sounds.deal = () => deal.ToSoundAsset().play();
-			c.MyDeck.Sounds.click = () => click.ToSoundAsset().play();
-			c.MyDeck.Sounds.drag = () => drag.ToSoundAsset().play();
+			c.Sounds.deal = () => deal.ToSoundAsset().play();
+			c.Sounds.click = () => click.ToSoundAsset().play();
+			c.Sounds.drag = () => drag.ToSoundAsset().play();
 
 
 			AvalonExtensions.AttachToContainer(c, this);
@@ -62,10 +62,12 @@ namespace AvalonCardGames.Spider.ActionScript
 			Handlers.Add(e => ByFileName(e));
 
 			global::ScriptCoreLib.ActionScript.Avalon.Cards.KnownEmbeddedAssets.RegisterTo(Handlers);
+			global::ScriptCoreLib.ActionScript.Avalon.Carousel.KnownEmbeddedAssets.RegisterTo(Handlers);
+			
 
 			//// assets from referenced assemblies
 			//Handlers.Add(e => global::ScriptCoreLib.ActionScript.Avalon.Cursors.EmbeddedAssets.Default[e]);
-			//Handlers.Add(e => global::ScriptCoreLib.ActionScript.Avalon.TiledImageButton.Assets.Default[e]);
+			Handlers.Add(e => global::ScriptCoreLib.ActionScript.Avalon.TiledImageButton.Assets.Default[e]);
 
 		}
 	}
