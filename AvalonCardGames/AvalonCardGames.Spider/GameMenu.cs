@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ScriptCoreLib;
-using ScriptCoreLib.Shared.Avalon.Extensions;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ScriptCoreLib.Shared.Avalon.TiledImageButton;
+using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Carousel;
+using ScriptCoreLib.Shared.Avalon.Extensions;
+using ScriptCoreLib.Shared.Avalon.TiledImageButton;
 using ScriptCoreLib.Shared.Avalon.Tween;
 
 namespace AvalonCardGames.Spider.Shared
@@ -120,14 +120,28 @@ namespace AvalonCardGames.Spider.Shared
 				}
 			);
 
-			Carousel.AddEntry(
-				new SimpleCarouselControl.EntryInfo
+			var GameCounter = 0;
+		
+			Action<string, string, string> AddGame =
+				(Text, Image, Target) =>
 				{
-					Source = (KnownAssets.Path.Assets + "/PreviewHard.png").ToSource(),
-					Text = "Get More Games!",
-					Position = Math.PI * 1.3 
-				}
-			);
+					GameCounter++;
+
+					Carousel.AddEntry(
+						new SimpleCarouselControl.EntryInfo
+						{
+							Source = (KnownAssets.Path.Assets + "/" + Image  + ".png").ToSource(),
+							Text = "Play " + Text + "!",
+							Position = Math.PI * (0.9 + 0.2 * GameCounter),
+							Click = () => new Uri(Target).NavigateTo(this.Container)
+						}
+					);
+				};
+
+			AddGame("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt");
+			AddGame("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp");
+			AddGame("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer");
+			AddGame("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders");
 
 			Carousel.AttachContainerTo(this);
 
@@ -171,7 +185,7 @@ namespace AvalonCardGames.Spider.Shared
 		}
 
 		public readonly Action Show;
-		
-		public Func<bool> ValidateHide =  () => true;
+
+		public Func<bool> ValidateHide = () => true;
 	}
 }

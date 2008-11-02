@@ -82,6 +82,12 @@ namespace AvalonCardGames.Spider.Shared
 			}
 			).ToArray();
 
+			new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
+				Width = 96,
+				Height = 96
+			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
 
 			var Content = new Canvas
 			{
@@ -104,6 +110,7 @@ namespace AvalonCardGames.Spider.Shared
 						Game.Orphanize();
 
 					Game = new SpiderGame(LevelEasy).AttachTo(Content);
+					Game.MyDeck.Sounds = Sounds;
 				};
 
 			Menu.Medium +=
@@ -113,6 +120,7 @@ namespace AvalonCardGames.Spider.Shared
 						Game.Orphanize();
 
 					Game = new SpiderGame(LevelMedium).AttachTo(Content);
+					Game.MyDeck.Sounds = Sounds;
 				};
 
 			Menu.Hard +=
@@ -122,6 +130,7 @@ namespace AvalonCardGames.Spider.Shared
 						Game.Orphanize();
 
 					Game = new SpiderGame(LevelHard).AttachTo(Content);
+					Game.MyDeck.Sounds = Sounds;
 				};
 
 			Menu.Show();

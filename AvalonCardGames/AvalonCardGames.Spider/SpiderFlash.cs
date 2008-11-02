@@ -17,6 +17,8 @@ namespace AvalonCardGames.Spider.ActionScript
 	[SWF(width = TargetCanvas.DefaultWidth, height = TargetCanvas.DefaultHeight, backgroundColor = 0)]
 	public class SpiderFlash : Sprite
 	{
+		public string _mochiads_game_id = "0d4494ec8fcc8cd1";
+
 		public SpiderFlash()
 		{
 			// spawn the wpf control
@@ -28,10 +30,12 @@ namespace AvalonCardGames.Spider.ActionScript
 			var deal = f("deal");
 			var click = f("click");
 			var drag = f("drag");
+			var win = f("win");
 
 			c.Sounds.deal = () => deal.ToSoundAsset().play();
 			c.Sounds.click = () => click.ToSoundAsset().play();
 			c.Sounds.drag = () => drag.ToSoundAsset().play();
+			c.Sounds.win = () => win.ToSoundAsset().play();
 
 
 			AvalonExtensions.AttachToContainer(c, this);

@@ -89,6 +89,7 @@
     <Compile Include="IAssemblyReferenceToken.cs" />
     <Compile Include="SpiderCanvas.cs" />
     <Compile Include="GameMenu.cs" />
+    <Compile Include="StatusControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tools\build.bat" />
@@ -97,6 +98,21 @@
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewEasy.png" />
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewHard.png" />
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewMedium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\Preview_TreasureHunt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\Preview_Minesweeper.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\Preview_Mahjong.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\Preview_SpaceInvaders.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\jsc.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
