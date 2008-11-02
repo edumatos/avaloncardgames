@@ -280,7 +280,7 @@ namespace AvalonCardGames.Spider.Shared
 			var dealpoint = new Point
 			{
 				X = DefaultWidth - CardInfo.Width - Margin,
-				Y = DefaultHeight - CardInfo.Height - Margin
+				Y = DefaultHeight - CardInfo.Height - Margin - 17 - Margin
 			};
 
 
