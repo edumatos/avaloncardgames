@@ -33,6 +33,11 @@ namespace AvalonCardGames.Spider.Shared
 
 
 
+		readonly StatusControl MyStatus;
+
+		public event Action GameOver;
+
+		public bool Cheat = false;
 
 		public SpiderGame(CardInfo.SuitEnum[] level)
 		{
@@ -41,7 +46,21 @@ namespace AvalonCardGames.Spider.Shared
 
 			this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
 
+			var GameOverBox = new TextBox
+			{
+				Width = DefaultWidth,
+				TextAlignment = System.Windows.TextAlignment.Center,
+				Foreground = Brushes.White,
+				Background = Brushes.Transparent,
+				BorderThickness = new Thickness(0),
+				IsReadOnly = true,
+				FontSize = 24,
+			}.MoveTo(0, DefaultHeight / 2).AttachTo(this);
 
+			GameOver += delegate
+			{
+				GameOverBox.Text = "Congratulations! You Won!";
+			};
 
 
 			// add autoscroll ?
@@ -50,8 +69,15 @@ namespace AvalonCardGames.Spider.Shared
 			this.MyDeck.GetRank = e => (int)RankMapping[e];
 			this.MyDeck.CardCustomBackground = global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/spider.png";
 
+			MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
+				(DefaultWidth - StatusControl.Width) / 2,
+				(DefaultHeight - StatusControl.Height)
+			);
+			MyStatus.Container.Hide();
+
 			System.Console.WriteLine("--- spider ---");
 
+	
 
 
 
@@ -60,7 +86,6 @@ namespace AvalonCardGames.Spider.Shared
 
 			MyDeck.UnusedCards.AddRange(CardInfo.By(2, level));
 
-			//MyDeck.RankConverter = RankConverter;
 
 
 
@@ -115,20 +140,32 @@ namespace AvalonCardGames.Spider.Shared
 				c.Moved +=
 					 delegate
 					 {
-						 CheckForGoodSuit(c.CurrentStack);
+						 if (c.StackedCards.Length == 0)
+						 {
+							 CheckForGoodSuit(c.CurrentStack);
+
+							 MyStatus.Moves++;
+							 MyStatus.Score--;
+
+							 MyStatus.Update();
+						 }
+
+						 CheckForWin();
 					 };
 
 				c.ValidateDragStart +=
 					delegate
 					{
-						var Rank = c.Rank;
+						if (Cheat)
+							return true;
 
-						return c.StackedCards.All(
-							k =>
+						return c.SelectedCards.AllWithPrevious(
+							(Previous, Current) =>
 							{
-								Rank++;
+								if (Previous.Info.Suit != Current.Info.Suit)
+									return false;
 
-								return k.Rank == Rank;
+								return Previous.Rank + 1 == Current.Rank;
 							}
 						);
 					};
@@ -136,6 +173,10 @@ namespace AvalonCardGames.Spider.Shared
 				c.ValidateDragStop +=
 					CandidateStack =>
 					{
+						if (Cheat)
+							return true;
+
+
 						if (PlayStacks.Contains(CandidateStack))
 						{
 							if (CandidateStack.Cards.Count == 0)
@@ -143,9 +184,11 @@ namespace AvalonCardGames.Spider.Shared
 
 							var Candidate = CandidateStack.Last();
 
+							// we do not care about the suit
+
 							if (c.Rank == Candidate.Rank + 1)
-								if (c.Info.Suit == Candidate.Info.Suit)
-									return true;
+								//if (c.Info.Suit == Candidate.Info.Suit)
+								return true;
 
 							return false;
 						}
@@ -166,10 +209,11 @@ namespace AvalonCardGames.Spider.Shared
 				i =>
 					new CardStack
 					{
-						Name = "PlayStack " + i
+						Name = "PlayStack " + i,
+						CardMargin = new Vector { Y = 20 }
 					}.MoveTo(
 						Margin + i * (CardInfo.Width + Margin),
-						Margin * 2
+						Margin + 40
 					).Apply(
 						s =>
 						{
@@ -177,6 +221,10 @@ namespace AvalonCardGames.Spider.Shared
 								s.Cards.AddRange(MyDeck.FetchCards(5));
 							else
 								s.Cards.AddRange(MyDeck.FetchCards(4));
+
+							if (Cheat)
+								s.Cards.ForEach(k => k.VisibleSide = Card.SideEnum.TopSide);
+
 						}
 					)
 				)
@@ -184,7 +232,6 @@ namespace AvalonCardGames.Spider.Shared
 
 
 			PlayStacks.ForEach(
-
 				delegate(CardStack s)
 				{
 
@@ -196,18 +243,6 @@ namespace AvalonCardGames.Spider.Shared
 								s.RevealLastCard();
 						};
 
-
-					//s.CardsMovedToStack +=
-					//    delegate
-					//    {
-					//        //if (MyStatus.Ready)
-					//        //{
-					//        //    MyStatus.Score--;
-					//        //    MyStatus.Moves++;
-
-					//        //    MyStatus.Update();
-					//        //}
-					//    };
 				}
 			);
 
@@ -271,11 +306,10 @@ namespace AvalonCardGames.Spider.Shared
 				delegate
 				{
 
-					//MyStatus.Ready = true;
-					//MyStatus.Score = 500;
-					//MyStatus.Moves = 0;
-					//MyStatus.Visible = true;
-					//MyStatus.Update();
+					MyStatus.Score = 500;
+					MyStatus.Moves = 0;
+					MyStatus.Update();
+					MyStatus.Container.Show();
 				}
 			);
 

@@ -20,7 +20,7 @@ namespace AvalonCardGames.Spider.Shared
 
 		private void CheckForGoodSuit(CardStack s)
 		{
-			const int CardsInSuit = 3;
+			const int CardsInSuit = 13;
 
 			if (s.Cards.Count < CardsInSuit)
 				return;
@@ -49,12 +49,17 @@ namespace AvalonCardGames.Spider.Shared
 
 			var Destination = DeadStacks.Last();
 
+			this.MyStatus.Score += 100;
+			this.MyStatus.Update();
+
 			a.Reverse().ForEach(
 				(Current, SignalNext) =>
 				{
 					MyDeck.Sounds.deal();
 
 					Current.BringToFront();
+
+					MyStatus.Moves--;
 
 					Current.AttachToStack(Destination);
 
@@ -66,8 +71,22 @@ namespace AvalonCardGames.Spider.Shared
 				delegate
 				{
 					System.Console.WriteLine("good suit cleared from deck!");
+
+					CheckForWin();
 				}
 			);
+		}
+
+		private void CheckForWin()
+		{
+			if (DealStacks.Count == 0)
+				if (PlayStacks.All(k => k.Cards.Count == 0))
+				{
+					this.MyDeck.Sounds.win();
+
+					if (this.GameOver != null)
+						this.GameOver();
+				}
 		}
 
 

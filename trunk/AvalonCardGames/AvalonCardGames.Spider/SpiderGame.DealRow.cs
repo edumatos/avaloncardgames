@@ -54,6 +54,8 @@ namespace AvalonCardGames.Spider.Shared
 
 				c.VisibleSide = Card.SideEnum.TopSide;
 
+				this.MyStatus.Moves--;
+				this.MyStatus.Score++;
 
 				c.AttachToStack(v);
 
