@@ -15,7 +15,7 @@ using ScriptCoreLib.Shared.Lambda;
 
 namespace AvalonCardGames.Spider.Shared
 {
-	partial class SpiderCanvas 
+	partial class SpiderGame 
 	{
 	
 

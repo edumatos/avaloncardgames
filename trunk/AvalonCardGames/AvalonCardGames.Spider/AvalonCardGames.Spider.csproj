@@ -50,6 +50,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\util\jsc\bin\ScriptCoreLib.Avalon.Cards.dll</HintPath>
     </Reference>
+    <Reference Include="ScriptCoreLib.Avalon.Carousel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\util\jsc\bin\ScriptCoreLib.Avalon.Carousel.dll</HintPath>
+    </Reference>
+    <Reference Include="ScriptCoreLib.Avalon.TiledImageButton, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\util\jsc\bin\ScriptCoreLib.Avalon.TiledImageButton.dll</HintPath>
+    </Reference>
     <Reference Include="ScriptCoreLib.Query, Version=1.0.2666.38864, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\util\jsc\bin\ScriptCoreLib.Query.dll</HintPath>
@@ -69,16 +77,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpiderCanvas.RankMapping.cs" />
+    <Compile Include="SpiderGame.cs" />
+    <Compile Include="KnownAssets.cs" />
+    <Compile Include="SpiderGame.DealRow.cs" />
+    <Compile Include="SpiderGame.CheckForGoodSuit.cs" />
+    <Compile Include="SpiderGame.RankMapping.cs" />
     <Compile Include="SpiderFlash.cs" />
     <Compile Include="SpiderDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IAssemblyReferenceToken.cs" />
     <Compile Include="SpiderCanvas.cs" />
+    <Compile Include="GameMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tools\build.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewEasy.png" />
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewHard.png" />
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\PreviewMedium.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
