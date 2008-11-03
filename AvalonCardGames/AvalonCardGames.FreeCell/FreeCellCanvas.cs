@@ -77,12 +77,85 @@ namespace AvalonCardGames.FreeCell.Shared
 				}
 			);
 
+			Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
+				(Previous, Current) =>
+				{
+					if (Previous.Info.Suit != Current.Info.Suit)
+						return false;
+
+					if (Previous.Rank + 1 != Current.Rank)
+						return false;
+
+					return true;
+				};
+
+			Func<Card, Card, bool> RuleForStackingCardsInPlayStack =
+				(Previous, Current) =>
+				{
+					if (Previous.Info.SuitColor == Current.Info.SuitColor)
+						return false;
+
+					if (Previous.Rank + 1 != Current.Rank)
+						return false;
+
+					return true;
+				};
 
 
 			#region rules
-			MyDeck.ApplyCardRules += delegate(Card e)
+			MyDeck.ApplyCardRules += delegate(Card card)
 			{
-				e.VisibleSide = Card.SideEnum.TopSide;
+				card.VisibleSide = Card.SideEnum.TopSide;
+
+				card.ValidateDragStart =
+					delegate
+					{
+						// cannot remove cards from goal stack
+						if (GoalStacks.Contains(card))
+							return false;
+
+						// cannot drag a pile of cards unless alternate colors and descending numbers
+						return card.SelectedCards.AllWithPrevious(RuleForStackingCardsInPlayStack);
+					};
+
+				card.ValidateDragStop =
+					CandidateStack =>
+					{
+						if (TempStacks.Contains(CandidateStack))
+						{
+							// temp only holds one card
+							if (CandidateStack.Cards.Count > 0)
+								return false;
+
+							// and only one card can be inserted
+							if (card.StackedCards.Length > 0)
+								return false;
+
+							return true;
+						}
+
+						if (PlayStacks.Contains(CandidateStack))
+						{
+							if (CandidateStack.Cards.Count == 0)
+								return true;
+
+					
+							return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
+						}
+
+						if (GoalStacks.Contains(CandidateStack))
+						{
+							if (CandidateStack.Cards.Count == 0)
+							{
+								return (card.Info.Rank == CardInfo.RankEnum.RankAce);
+							}
+
+							return (RuleForStackingCardsInGoalStack(CandidateStack.Cards.Last(), card));
+
+						}
+
+						return false;
+					};
 			};
 			#endregion
 
