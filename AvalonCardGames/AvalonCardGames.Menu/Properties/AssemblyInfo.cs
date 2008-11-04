@@ -40,8 +40,6 @@ using ScriptCoreLib;
 
 [assembly:
 	Script,
-	//ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Menu.Shared.SolitareCanvas)),
-	//ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Menu.ActionScript.SolitareFlash)),
-	//ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Menu.Shared.SolitareCanvas)),
-	//ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Menu.JavaScript.SolitareDocument)),
+	ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Menu.Shared.GameMenu)),
+	ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Menu.Shared.GameMenu)),
 ]

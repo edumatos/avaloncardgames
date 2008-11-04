@@ -11,7 +11,10 @@ using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
+using ScriptCoreLib.Shared.Avalon.TiledImageButton;
+
 using ScriptCoreLib.Shared.Lambda;
+
 using AvalonCardGames.Menu.Shared;
 
 namespace AvalonCardGames.FreeCell.Shared
@@ -22,6 +25,7 @@ namespace AvalonCardGames.FreeCell.Shared
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
+		public AeroNavigationBar History { get; set; }
 
 
 		public FreeCellCanvas()
@@ -38,7 +42,22 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			new GameBorders(DefaultWidth, DefaultHeight, 40).AttachContainerTo(this);
 
-			new FreeCellGame().AttachTo(this);
+			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
+			new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
+				Width = 96,
+				Height = 96
+			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
+
+			this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
+
+			new FreeCellGame()
+			{
+				History = History
+			}.AttachTo(this);
+
+			this.History.AttachContainerTo(this);
 
 			new GameSocialLinks(this)
 			{
