@@ -69,12 +69,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FreeCellGame.cs" />
     <Compile Include="FreeCellFlash.cs" />
     <Compile Include="FreeCellDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IAssemblyReferenceToken.cs" />
     <Compile Include="FreeCellCanvas.cs" />
+    <Compile Include="FreeCellGame.RankMapping.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tools\build.bat" />

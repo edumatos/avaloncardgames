@@ -16,18 +16,12 @@ using ScriptCoreLib.Shared.Lambda;
 namespace AvalonCardGames.FreeCell.Shared
 {
 	[Script]
-	public class FreeCellCanvas : Canvas
+	public partial class FreeCellCanvas : Canvas
 	{
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
-		CardDeck MyDeck = new CardDeck
-		{
-		};
 
-		BindingList<CardStack> TempStacks;
-		BindingList<CardStack> GoalStacks;
-		BindingList<CardStack> PlayStacks;
 
 		public FreeCellCanvas()
 		{
@@ -41,164 +35,8 @@ namespace AvalonCardGames.FreeCell.Shared
 					14, 10
 			).AttachContainerTo(this);
 
-			// add autoscroll ?
-			this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);
-			this.MyDeck.AttachContainerTo(this);
 
-			System.Console.WriteLine("--- freecell ---");
-
-			System.Console.WriteLine("adding card infos... ");
-
-			MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
-
-
-
-
-
-			System.Console.WriteLine("creating stacklists... ");
-
-			PlayStacks = MyDeck.CreateStackList();
-			PlayStacks.ForEachNewItem(
-				k =>
-				{
-					k.CardMargin = new Vector { Y = 20 };
-					k.Update();
-				}
-			);
-
-			TempStacks = MyDeck.CreateStackList();
-
-			GoalStacks = MyDeck.CreateStackList();
-			GoalStacks.ForEachNewItem(
-				k =>
-				{
-					
-					k.CardMargin = new Vector();
-				}
-			);
-
-			Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
-				(Previous, Current) =>
-				{
-					if (Previous.Info.Suit != Current.Info.Suit)
-						return false;
-
-					if (Previous.Rank + 1 != Current.Rank)
-						return false;
-
-					return true;
-				};
-
-			Func<Card, Card, bool> RuleForStackingCardsInPlayStack =
-				(Previous, Current) =>
-				{
-					if (Previous.Info.SuitColor == Current.Info.SuitColor)
-						return false;
-
-					if (Previous.Rank + 1 != Current.Rank)
-						return false;
-
-					return true;
-				};
-
-
-			#region rules
-			MyDeck.ApplyCardRules += delegate(Card card)
-			{
-				card.VisibleSide = Card.SideEnum.TopSide;
-
-				card.ValidateDragStart =
-					delegate
-					{
-						// cannot remove cards from goal stack
-						if (GoalStacks.Contains(card))
-							return false;
-
-						// cannot drag a pile of cards unless alternate colors and descending numbers
-						return card.SelectedCards.AllWithPrevious(RuleForStackingCardsInPlayStack);
-					};
-
-				card.ValidateDragStop =
-					CandidateStack =>
-					{
-						if (TempStacks.Contains(CandidateStack))
-						{
-							// temp only holds one card
-							if (CandidateStack.Cards.Count > 0)
-								return false;
-
-							// and only one card can be inserted
-							if (card.StackedCards.Length > 0)
-								return false;
-
-							return true;
-						}
-
-						if (PlayStacks.Contains(CandidateStack))
-						{
-							if (CandidateStack.Cards.Count == 0)
-								return true;
-
-					
-							return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
-						}
-
-						if (GoalStacks.Contains(CandidateStack))
-						{
-							if (CandidateStack.Cards.Count == 0)
-							{
-								return (card.Info.Rank == CardInfo.RankEnum.RankAce);
-							}
-
-							return (RuleForStackingCardsInGoalStack(CandidateStack.Cards.Last(), card));
-
-						}
-
-						return false;
-					};
-			};
-			#endregion
-
-
-			System.Console.WriteLine("creating goalstack... ");
-
-			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
-
-			GoalStacks.AddRange(
-				Enumerable.Range(0, 4).ToArray(
-					i => new CardStack().MoveTo(DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2), Margin)
-				)
-			);
-
-			System.Console.WriteLine("creating tempstack... ");
-
-
-			TempStacks.AddRange(
-				Enumerable.Range(0, 4).ToArray(
-					i => new CardStack().MoveTo(
-						Margin + i * (CardInfo.Width + Margin / 2),
-						Margin
-					)
-				)
-			);
-
-			System.Console.WriteLine("creating playstack... ");
-
-			PlayStacks.AddRange(
-				Enumerable.Range(0, 8).ToArray(
-					i => new CardStack().MoveTo(Margin + (i) * (CardInfo.Width + Margin), Margin * 3 + CardInfo.Height).Apply(
-						s =>
-						{
-							var Count = 6;
-
-							if (i < 4)
-								Count = 7;
-
-							s.Cards.AddRange(MyDeck.FetchCards(Count));
-						}
-					)
-				)
-			);
+			new FreeCellGame().AttachTo(this);
 
 		}
 	}
