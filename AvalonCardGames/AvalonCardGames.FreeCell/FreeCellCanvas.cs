@@ -27,6 +27,7 @@ namespace AvalonCardGames.FreeCell.Shared
 
 		public AeroNavigationBar History { get; set; }
 
+		public readonly Sounds Sounds = new Sounds();
 
 		public FreeCellCanvas()
 		{
@@ -52,11 +53,15 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
 
-			new FreeCellGame()
+			var game = new FreeCellGame()
 			{
-				History = History
-			}.AttachTo(this);
+				History = History,
+			};
 
+			game.MyDeck.Sounds = this.Sounds;
+			game.AttachTo(this);
+
+			
 			this.History.AttachContainerTo(this);
 
 			new GameSocialLinks(this)

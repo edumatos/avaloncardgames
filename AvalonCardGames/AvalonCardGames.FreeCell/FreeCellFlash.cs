@@ -20,7 +20,23 @@ namespace AvalonCardGames.FreeCell.ActionScript
 		public FreeCellFlash()
 		{
 			// spawn the wpf control
-			AvalonExtensions.AttachToContainer(new TargetCanvas(), this);
+			var c = new TargetCanvas();
+
+			Func<string, Class> f =
+				e => KnownEmbeddedResources.Default[ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.Sounds + "/" + e + ".mp3"];
+
+			var deal = f("deal");
+			var click = f("click");
+			var drag = f("drag");
+			var win = f("win");
+
+			c.Sounds.deal = () => deal.ToSoundAsset().play();
+			c.Sounds.click = () => click.ToSoundAsset().play();
+			c.Sounds.drag = () => drag.ToSoundAsset().play();
+			c.Sounds.win = () => win.ToSoundAsset().play();
+
+
+			AvalonExtensions.AttachToContainer(c, this);
 		}
 
 		static FreeCellFlash()

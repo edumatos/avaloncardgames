@@ -24,7 +24,7 @@ namespace AvalonCardGames.FreeCell.Shared
 
 		public AeroNavigationBar History { get; set; }
 
-		CardDeck MyDeck = new CardDeck
+		public readonly CardDeck MyDeck = new CardDeck
 		{
 		};
 
@@ -38,7 +38,49 @@ namespace AvalonCardGames.FreeCell.Shared
 			Height = DefaultHeight;
 
 
-		
+			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
+
+			var KingRight = new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/kingbitm.png").ToSource(),
+				Width = 32,
+				Height = 32
+			}.AttachTo(this).MoveTo(
+				(DefaultWidth - 32) / 2,
+				Margin * 2 + (CardInfo.Height - 32) / 2
+			);
+
+			var KingLeft = new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/kingleft.png").ToSource(),
+				Width = 32,
+				Height = 32
+			}.AttachTo(this).MoveTo(KingRight);
+
+			var KingSmile = new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/kingleft.png").ToSource(),
+				Width = 32,
+				Height = 32,
+				Visibility = Visibility.Hidden
+			}.AttachTo(this).MoveTo(KingRight);
+
+			this.MyDeck.Overlay.MouseMove +=
+				(sender, args) =>
+				{
+					var p = args.GetPosition(this.MyDeck.Overlay);
+
+					if (p.X < DefaultWidth / 2)
+					{
+						KingLeft.Show();
+						KingRight.Hide();
+					}
+					else
+					{
+						KingLeft.Hide();
+						KingRight.Show();
+					}
+				};
 
 			// add autoscroll ?
 			this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);
@@ -72,7 +114,7 @@ namespace AvalonCardGames.FreeCell.Shared
 			GoalStacks.ForEachNewItem(
 				k =>
 				{
-					
+
 					k.CardMargin = new Vector();
 				}
 			);
@@ -128,6 +170,8 @@ namespace AvalonCardGames.FreeCell.Shared
 									return;
 
 								card.AnimatedMoveToStack(FrozenTokens.PreviousStack, null);
+								
+								this.MyDeck.Sounds.deal();
 							},
 							delegate
 							{
@@ -136,7 +180,7 @@ namespace AvalonCardGames.FreeCell.Shared
 									return;
 
 								card.AnimatedMoveToStack(FrozenTokens.CurrentStack, null);
-
+								this.MyDeck.Sounds.deal();
 							}
 						);
 					};
@@ -175,7 +219,7 @@ namespace AvalonCardGames.FreeCell.Shared
 							if (CandidateStack.Cards.Count == 0)
 								return true;
 
-					
+
 							return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
 						}
 
@@ -199,16 +243,15 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			System.Console.WriteLine("creating goalstack... ");
 
-			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
 
 			GoalStacks.AddRange(
 				Enumerable.Range(0, 4).ToArray(
-					i => 
+					i =>
 						new CardStack
 						{
 							Name = "GoalStack " + i
 						}.MoveTo(
-							DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2), 
+							DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2),
 							Margin * 2
 						)
 				)
@@ -224,7 +267,7 @@ namespace AvalonCardGames.FreeCell.Shared
 						Name = "TempStack " + i
 					}.MoveTo(
 						Margin + i * (CardInfo.Width + Margin / 2),
-						Margin  * 2
+						Margin * 2
 					)
 				)
 			);
@@ -237,7 +280,7 @@ namespace AvalonCardGames.FreeCell.Shared
 					{
 						Name = "PlayStack " + i
 					}.MoveTo(
-						Margin + (i) * (CardInfo.Width + Margin), 
+						Margin + (i) * (CardInfo.Width + Margin),
 						Margin * 4 + CardInfo.Height
 					).Apply(
 						s =>
