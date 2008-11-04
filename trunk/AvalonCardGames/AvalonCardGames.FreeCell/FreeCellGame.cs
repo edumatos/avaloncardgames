@@ -12,6 +12,7 @@ using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
+using ScriptCoreLib.Shared.Avalon.TiledImageButton;
 
 namespace AvalonCardGames.FreeCell.Shared
 {
@@ -20,6 +21,8 @@ namespace AvalonCardGames.FreeCell.Shared
 	{
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
+
+		public AeroNavigationBar History { get; set; }
 
 		CardDeck MyDeck = new CardDeck
 		{
@@ -105,6 +108,39 @@ namespace AvalonCardGames.FreeCell.Shared
 			#region rules
 			MyDeck.ApplyCardRules += delegate(Card card)
 			{
+
+				card.MovedByLocalPlayer +=
+					delegate
+					{
+						var FrozenTokens = new
+						{
+							card.CurrentStack,
+							card.PreviousStack
+						};
+
+						Console.WriteLine(new { HistoryMove = card, StackedCards = card.StackedCards.Length, Previous = card.PreviousStack, Current = card.CurrentStack }.ToString());
+
+						History.History.Add(
+							delegate
+							{
+								// we already are at the state we want to be
+								if (card.CurrentStack == FrozenTokens.PreviousStack)
+									return;
+
+								card.AnimatedMoveToStack(FrozenTokens.PreviousStack, null);
+							},
+							delegate
+							{
+								// we already are at the state we want to be
+								if (card.CurrentStack == FrozenTokens.CurrentStack)
+									return;
+
+								card.AnimatedMoveToStack(FrozenTokens.CurrentStack, null);
+
+							}
+						);
+					};
+
 				card.VisibleSide = Card.SideEnum.TopSide;
 
 				card.ValidateDragStart =
@@ -171,7 +207,10 @@ namespace AvalonCardGames.FreeCell.Shared
 						new CardStack
 						{
 							Name = "GoalStack " + i
-						}.MoveTo(DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2), Margin)
+						}.MoveTo(
+							DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2), 
+							Margin * 2
+						)
 				)
 			);
 
@@ -185,7 +224,7 @@ namespace AvalonCardGames.FreeCell.Shared
 						Name = "TempStack " + i
 					}.MoveTo(
 						Margin + i * (CardInfo.Width + Margin / 2),
-						Margin
+						Margin  * 2
 					)
 				)
 			);
@@ -197,7 +236,10 @@ namespace AvalonCardGames.FreeCell.Shared
 					i => new CardStack
 					{
 						Name = "PlayStack " + i
-					}.MoveTo(Margin + (i) * (CardInfo.Width + Margin), Margin * 3 + CardInfo.Height).Apply(
+					}.MoveTo(
+						Margin + (i) * (CardInfo.Width + Margin), 
+						Margin * 4 + CardInfo.Height
+					).Apply(
 						s =>
 						{
 							var Count = 6;
