@@ -120,6 +120,12 @@
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\plus_google.png" />
     <EmbeddedResource Include="web\assets\AvalonCardGames.Spider\su.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AvalonCardGames.Menu\AvalonCardGames.Menu.csproj">
+      <Project>{04696836-64F2-4132-9925-907B204B41BA}</Project>
+      <Name>AvalonCardGames.Menu</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

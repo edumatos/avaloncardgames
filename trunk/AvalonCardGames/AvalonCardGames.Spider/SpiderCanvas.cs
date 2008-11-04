@@ -13,6 +13,7 @@ using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
 using System.Windows.Input;
+using AvalonCardGames.Menu.Shared;
 
 namespace AvalonCardGames.Spider.Shared
 {
@@ -70,31 +71,9 @@ namespace AvalonCardGames.Spider.Shared
 			).AttachContainerTo(this);
 
 			var ShadowHeight = 40;
-			Colors.Black.ToTransparentGradient(ShadowHeight).Select(
-			(c, i) =>
-			{
-				return new Rectangle
-				{
-					Fill = new SolidColorBrush(c),
-					Width = Width,
-					Height = 1,
-					Opacity = c.A / 2 / 255.0
-				}.MoveTo(0, i).AttachTo(this);
-			}
-			).ToArray();
 
-			Colors.Black.ToTransparentGradient(ShadowHeight).Select(
-			(c, i) =>
-			{
-				return new Rectangle
-				{
-					Fill = new SolidColorBrush(c),
-					Width = Width,
-					Height = 1,
-					Opacity = c.A / 2 / 255.0
-				}.MoveTo(0, DefaultHeight - i - 1).AttachTo(this);
-			}
-			).ToArray();
+			new GameBorders(DefaultWidth, DefaultHeight, ShadowHeight).AttachContainerTo(this);
+
 
 			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
 			new Image
