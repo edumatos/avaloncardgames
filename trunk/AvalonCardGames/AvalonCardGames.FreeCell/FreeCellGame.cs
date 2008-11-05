@@ -40,22 +40,29 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
 
+			#region king
+			var KingCanvas = new Canvas
+			{
+				Width = 96,
+				Height = 96
+			}.AttachTo(this).MoveTo(
+				(DefaultWidth - 32) / 2,
+				Margin * 2 + (CardInfo.Height - 32) / 2
+			);
+
 			var KingRight = new Image
 			{
 				Source = (KnownAssets.Path.Assets + "/kingbitm.png").ToSource(),
 				Width = 32,
 				Height = 32
-			}.AttachTo(this).MoveTo(
-				(DefaultWidth - 32) / 2,
-				Margin * 2 + (CardInfo.Height - 32) / 2
-			);
+			}.AttachTo(KingCanvas);
 
 			var KingLeft = new Image
 			{
 				Source = (KnownAssets.Path.Assets + "/kingleft.png").ToSource(),
 				Width = 32,
 				Height = 32
-			}.AttachTo(this).MoveTo(KingRight);
+			}.AttachTo(KingCanvas);
 
 			var KingSmile = new Image
 			{
@@ -63,7 +70,8 @@ namespace AvalonCardGames.FreeCell.Shared
 				Width = 32,
 				Height = 32,
 				Visibility = Visibility.Hidden
-			}.AttachTo(this).MoveTo(KingRight);
+			}.AttachTo(KingCanvas);
+			#endregion
 
 			this.MyDeck.Overlay.MouseMove +=
 				(sender, args) =>
