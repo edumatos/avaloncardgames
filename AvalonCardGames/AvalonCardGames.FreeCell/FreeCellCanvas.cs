@@ -64,6 +64,8 @@ namespace AvalonCardGames.FreeCell.Shared
 			}.AttachTo(this);
 
 			var Game = default(FreeCellGame);
+			var GameFocusBoost = false;
+
 			Action CreateGame =
 				delegate
 				{
@@ -140,8 +142,13 @@ namespace AvalonCardGames.FreeCell.Shared
 					Click =
 						delegate
 						{
+							GameFocusBoost = true;
+
 							this.Menu.Hide();
+
 							CreateGame();
+
+							500.AtDelay(() => GameFocusBoost = false);
 						}
 				},
 				Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
@@ -152,6 +159,8 @@ namespace AvalonCardGames.FreeCell.Shared
 			};
 
 			this.Menu.ValidateHide = () => Game != null;
+			this.Menu.ValidateShow = () => !GameFocusBoost;
+
 			this.Menu.Carousel.Caption.Text = "Select a game to play!";
 			this.Menu.AttachContainerTo(this);
 
