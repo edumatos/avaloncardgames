@@ -35,6 +35,9 @@ namespace AvalonCardGames.FreeCell.Shared
 
 		readonly StatusControl MyStatus;
 
+
+		public bool Cheat = true;
+
 		public FreeCellGame()
 		{
 			Width = DefaultWidth;
@@ -69,7 +72,7 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			var KingSmile = new Image
 			{
-				Source = (KnownAssets.Path.Assets + "/kingleft.png").ToSource(),
+				Source = (KnownAssets.Path.Assets + "/kingsmil.png").ToSource(),
 				Width = 32,
 				Height = 32,
 				Visibility = Visibility.Hidden
@@ -97,6 +100,8 @@ namespace AvalonCardGames.FreeCell.Shared
 				(DefaultWidth - StatusControl.Width) / 2,
 				(DefaultHeight - StatusControl.Height)
 			);
+			this.MyStatus.Update();
+
 			//this.MyStatus.Container.Hide();
 
 			// add autoscroll ?
@@ -133,12 +138,36 @@ namespace AvalonCardGames.FreeCell.Shared
 				{
 
 					k.CardMargin = new Vector();
+					k.Cards.ForEachNewItem(
+						card =>
+						{
+							if (card.Info.Rank == CardInfo.RankEnum.RankKing)
+							{
+								KingSmile.Show();
+
+								card.VisibleSide = Card.SideEnum.BackSide;
+
+								if (PlayStacks.All(s => s.Cards.Count == 0) && GoalStacks.All(s => s.Cards.Count == 0))
+								{
+									// winner!
+									MyDeck.Sounds.win();
+								}
+								else
+								{
+									600.AtDelay(KingSmile.Hide);
+								}
+							}
+						}
+					);
 				}
 			);
 
 			Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
 				(Previous, Current) =>
 				{
+					if (Cheat)
+						return true;
+
 					if (Previous == null)
 						return Current.Info.Rank == CardInfo.RankEnum.RankAce;
 
@@ -154,6 +183,9 @@ namespace AvalonCardGames.FreeCell.Shared
 			Func<Card, Card, bool> RuleForStackingCardsInPlayStack =
 				(Previous, Current) =>
 				{
+					if (Cheat)
+						return true;
+
 					if (Previous.Info.SuitColor == Current.Info.SuitColor)
 						return false;
 
@@ -207,6 +239,9 @@ namespace AvalonCardGames.FreeCell.Shared
 				card.ValidateDragStart =
 					delegate
 					{
+						if (Cheat)
+							return true;
+
 						// cannot remove cards from goal stack
 						if (GoalStacks.Contains(card))
 							return false;
@@ -218,6 +253,9 @@ namespace AvalonCardGames.FreeCell.Shared
 				card.ValidateDragStop =
 					CandidateStack =>
 					{
+						if (Cheat)
+							return true;
+
 						if (TempStacks.Contains(CandidateStack))
 						{
 							// temp only holds one card
