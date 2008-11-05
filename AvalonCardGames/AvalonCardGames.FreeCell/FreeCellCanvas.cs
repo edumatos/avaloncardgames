@@ -27,6 +27,8 @@ namespace AvalonCardGames.FreeCell.Shared
 
 		public readonly Sounds Sounds = new Sounds();
 
+		public GameMenu Menu { get; set; }
+
 		public FreeCellCanvas()
 		{
 			Width = DefaultWidth;
@@ -55,16 +57,51 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
 
-			var game = new FreeCellGame()
+			var Content = new Canvas
 			{
-				History = History,
-			};
+				Width = DefaultWidth,
+				Height = DefaultHeight
+			}.AttachTo(this);
 
-			game.MyDeck.Sounds = this.Sounds;
-			game.AttachTo(this);
+			var Game = default(FreeCellGame);
+			Action CreateGame =
+				delegate
+				{
+					var PreviousGame = Game;
 
-			
-			
+					Game.Orphanize();
+					Game = new FreeCellGame()
+					{
+						History = History,
+					};
+
+					Game.MyDeck.Sounds = this.Sounds;
+					Game.AttachTo(Content);
+
+					var CurrentGame = Game;
+
+					this.History.History.Add(
+						delegate
+						{
+							if (Game == PreviousGame)
+								return;
+
+							Game.Orphanize();
+							Game = PreviousGame.AttachTo(Content);
+						},
+						delegate
+						{
+							if (Game == CurrentGame)
+								return;
+
+							Game.Orphanize();
+							Game = CurrentGame.AttachTo(Content);
+						}
+					);
+				};
+
+
+
 
 			new GameSocialLinks(this)
 			{
@@ -87,14 +124,26 @@ namespace AvalonCardGames.FreeCell.Shared
 				(Text, Image, href) =>
 					new GameMenu.Option
 					{
-						Text = Text,
+						Text = "Play " + Text + "!",
 						Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
 						Hyperlink = new Uri(href),
 						MarginAfter = Math.PI / 4
 					};
 
-			var menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
+			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
 			{
+				new GameMenu.Option
+				{
+					Text = "Play new FreeCell game!",
+					Source = (KnownAssets.Path.Assets + "/Preview.png").ToSource(),
+					MarginAfter = Math.PI / 2,
+					Click =
+						delegate
+						{
+							this.Menu.Hide();
+							CreateGame();
+						}
+				},
 				Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
 				Option("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt"),
 				Option("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp"),
@@ -102,9 +151,13 @@ namespace AvalonCardGames.FreeCell.Shared
 				Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
 			};
 
-			menu.AttachContainerTo(this);
+			this.Menu.ValidateHide = () => Game != null;
+			this.Menu.Carousel.Caption.Text = "Select a game to play!";
+			this.Menu.AttachContainerTo(this);
 
 			this.History.AttachContainerTo(this);
+
+			this.Menu.Show();
 		}
 	}
 }
