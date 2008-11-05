@@ -36,13 +36,13 @@ namespace AvalonCardGames.Menu.Shared
 
 			internal SimpleCarouselControl.EntryInfo CarouselEntry;
 
-			public Option()
-			{
-				// Fixme: jsc:actionscript should initialize them instead of me
+			//public Option()
+			//{
+			//    // Fixme: jsc:actionscript should initialize them instead of me
 
-				this.MarginAfter = 0;
-				this.MarginBefore = 0;
-			}
+			//    this.MarginAfter = 0;
+			//    this.MarginBefore = 0;
+			//}
 		}
 
 		internal readonly BindingList<Option> Options = new BindingList<Option>();
@@ -51,6 +51,8 @@ namespace AvalonCardGames.Menu.Shared
 		{
 			Options.Add(e);
 		}
+
+		public SimpleCarouselControl Carousel { get; set; }
 
 		public GameMenu(int Width, int Height, int ShadowHeight)
 		{
@@ -93,7 +95,7 @@ namespace AvalonCardGames.Menu.Shared
 
 
 
-			var Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
+			this.Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
 
 			var Idle = "Select a difficulty for a new game!";
 
@@ -110,14 +112,14 @@ namespace AvalonCardGames.Menu.Shared
 			Carousel.Hover +=
 				delegate
 				{
-					//AnimatedShadowOpacity(70, 0);
+					AnimatedShadowOpacity(70, 0);
 				};
 
 			Carousel.Idle +=
 				delegate
 				{
 					Carousel.Caption.Text = Idle;
-					//AnimatedShadowOpacity(50, 0);
+					AnimatedShadowOpacity(50, 0);
 				};
 
 			this.Options.ForEachNewItem(
@@ -147,66 +149,14 @@ namespace AvalonCardGames.Menu.Shared
 				}
 			);
 
-			//Carousel.AddEntry(
-			//    new SimpleCarouselControl.EntryInfo
-			//    {
-			//        Source =( KnownAssets.Path.Assets + "/PreviewEasy.png").ToSource(),
-			//        Text = "Play with easy difficulty",
-			//        Position = Math.PI *0,
-			//        Click = () => this.Easy()
-			//    }
-			//);
-
-			//Carousel.AddEntry(
-			//    new SimpleCarouselControl.EntryInfo
-			//    {
-			//        Source = (KnownAssets.Path.Assets + "/PreviewMedium.png").ToSource(),
-			//        Text = "Play with medium difficulty",
-			//        Position = Math.PI * 0.3,
-			//        Click = () => this.Medium()
-			//    }
-			//);
-
-			//Carousel.AddEntry(
-			//    new SimpleCarouselControl.EntryInfo
-			//    {
-			//        Source = (KnownAssets.Path.Assets + "/PreviewHard.png").ToSource(),
-			//        Text = "Play with hard difficulty",
-			//        Position = Math.PI * 0.3 * 2,
-			//        Click = () => this.Hard()
-			//    }
-			//);
 
 			var GameCounter = 0;
-
-			//Action<string, string, string> AddGame =
-			//    (Text, Image, Target) =>
-			//    {
-			//        GameCounter++;
-
-			//        Carousel.AddEntry(
-			//            new SimpleCarouselControl.EntryInfo
-			//            {
-			//                Source = (KnownAssets.Path.Assets + "/" + Image  + ".png").ToSource(),
-			//                Text = "Play " + Text + "!",
-			//                Position = Math.PI * (0.9 + 0.2 * GameCounter),
-			//                Click = () => new Uri(Target).NavigateTo(this.Container)
-			//            }
-			//        );
-			//    };
-
-			//AddGame("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt");
-			//AddGame("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp");
-			//AddGame("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer");
-			//AddGame("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders");
 
 			Carousel.AttachContainerTo(this);
 
 			Carousel.Overlay.AttachTo(this);
 
-			//var NavBar = new AeroNavigationBar().MoveContainerTo(4, 4);
-
-			//NavBar.AttachContainerTo(this);
+	
 
 			Action<int, int> AnimatedTop = NumericEmitter.Of(
 				(x, y) => this.Container.MoveTo(0, y)
@@ -231,13 +181,13 @@ namespace AvalonCardGames.Menu.Shared
 
 			var Delayed = this.Container.ToDelayedMouseEvents();
 
-			Delayed.ValidateMouseLeave = ValidateHide;
+			Delayed.ValidateMouseLeave = () => ValidateHide();
 			Delayed.MouseEnter += Show;
 			Delayed.MouseLeave += Hide;
 
-		
 
 
+			ShadowContainer.Opacity = 0;
 
 		}
 
