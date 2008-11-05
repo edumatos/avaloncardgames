@@ -7,15 +7,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using AvalonCardGames.Menu.Shared;
 using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Avalon.TiledImageButton;
-
 using ScriptCoreLib.Shared.Lambda;
-
-using AvalonCardGames.Menu.Shared;
 
 namespace AvalonCardGames.FreeCell.Shared
 {
@@ -34,6 +32,8 @@ namespace AvalonCardGames.FreeCell.Shared
 			Width = DefaultWidth;
 			Height = DefaultHeight;
 
+			this.ClipToBounds = true;
+
 
 			new TiledBackgroundImage(
 				(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
@@ -41,7 +41,9 @@ namespace AvalonCardGames.FreeCell.Shared
 					14, 10
 			).AttachContainerTo(this);
 
-			new GameBorders(DefaultWidth, DefaultHeight, 40).AttachContainerTo(this);
+			var ShadowSize = 40;
+
+			new GameBorders(DefaultWidth, DefaultHeight, ShadowSize).AttachContainerTo(this);
 
 			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
 			new Image
@@ -62,7 +64,7 @@ namespace AvalonCardGames.FreeCell.Shared
 			game.AttachTo(this);
 
 			
-			this.History.AttachContainerTo(this);
+			
 
 			new GameSocialLinks(this)
 			{
@@ -79,6 +81,12 @@ namespace AvalonCardGames.FreeCell.Shared
 					Hyperlink = new Uri("http://www.stumbleupon.com/")
 				}
 			};
+
+			var menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize);
+
+			menu.AttachContainerTo(this);
+
+			this.History.AttachContainerTo(this);
 		}
 	}
 }

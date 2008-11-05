@@ -23,6 +23,7 @@ namespace AvalonCardGames.FreeCell
 				// example: web/assets/OrcasAvalonApplication/about.txt
 
 				public const string Assets = "assets/AvalonCardGames.FreeCell";
+				public const string SocialLinks = "assets/AvalonCardGames.SocialLinks";
 			}
 
 

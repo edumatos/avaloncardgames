@@ -9,6 +9,7 @@ using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Carousel;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Avalon.Tween;
+using ScriptCoreLib.Shared.Lambda;
 
 namespace AvalonCardGames.Menu.Shared
 {
@@ -45,7 +46,7 @@ namespace AvalonCardGames.Menu.Shared
 			   Height = ContentHeight,
 		   }.MoveTo(0, 0).AttachTo(ShadowContainer);
 
-	
+
 
 			Colors.Black.ToTransparentGradient(ShadowHeight).Select(
 				(c, i) =>
@@ -120,7 +121,7 @@ namespace AvalonCardGames.Menu.Shared
 			//);
 
 			var GameCounter = 0;
-		
+
 			//Action<string, string, string> AddGame =
 			//    (Text, Image, Target) =>
 			//    {
@@ -157,33 +158,34 @@ namespace AvalonCardGames.Menu.Shared
 			this.MoveContainerTo(0, -ContentHeight);
 			AnimatedTop(0, -ContentHeight);
 
-			this.Container.MouseLeave +=
-				delegate
-				{
-					if (!ValidateHide())
-						return;
+			this.Show = delegate
+			{
+				Carousel.Show();
+				AnimatedTop(0, 0);
+				AnimatedShadowOpacity(50, 0);
+			};
 
-					Carousel.Hide();
-					AnimatedTop(0, -ContentHeight);
-					AnimatedShadowOpacity(0, 0);
-				};
+			this.Hide = delegate
+			{
+				Carousel.Hide();
+				AnimatedTop(0, -ContentHeight);
+				AnimatedShadowOpacity(0, 0);
+			};
 
-			Show =
-				delegate
-				{
-					Carousel.Show();
-					AnimatedTop(0, 0);
-					AnimatedShadowOpacity(50, 0);
-				};
+			var Delayed = this.Container.ToDelayedMouseEvents();
 
-			this.Container.MouseEnter +=
-				delegate
-				{
-					Show();
-				};
+			Delayed.ValidateMouseLeave = ValidateHide;
+			Delayed.MouseEnter += Show;
+			Delayed.MouseLeave += Hide;
+
+		
+
+
+
 		}
 
 		public readonly Action Show;
+		public readonly Action Hide;
 
 		public Func<bool> ValidateHide = () => true;
 	}
