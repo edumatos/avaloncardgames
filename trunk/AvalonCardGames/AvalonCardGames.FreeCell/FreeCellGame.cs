@@ -13,6 +13,7 @@ using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
 using ScriptCoreLib.Shared.Avalon.TiledImageButton;
+using AvalonCardGames.Menu.Shared;
 
 namespace AvalonCardGames.FreeCell.Shared
 {
@@ -31,6 +32,8 @@ namespace AvalonCardGames.FreeCell.Shared
 		BindingList<CardStack> TempStacks;
 		BindingList<CardStack> GoalStacks;
 		BindingList<CardStack> PlayStacks;
+
+		readonly StatusControl MyStatus;
 
 		public FreeCellGame()
 		{
@@ -89,6 +92,12 @@ namespace AvalonCardGames.FreeCell.Shared
 						KingRight.Show();
 					}
 				};
+
+			this.MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
+				(DefaultWidth - StatusControl.Width) / 2,
+				(DefaultHeight - StatusControl.Height)
+			);
+			//this.MyStatus.Container.Hide();
 
 			// add autoscroll ?
 			this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);

@@ -56,6 +56,8 @@ namespace AvalonCardGames.Spider.Shared
 
 		public Sounds Sounds = new Sounds();
 
+		public GameMenu Menu { get; set; }
+
 		public SpiderCanvas()
 		{
 			Width = DefaultWidth;
@@ -89,47 +91,11 @@ namespace AvalonCardGames.Spider.Shared
 				Height = DefaultHeight
 			}.AttachTo(this);
 
-			var Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowHeight);
-
-			Menu.AttachContainerTo(this);
 
 			var Game = default(SpiderGame);
-			Menu.ValidateHide = () => Game != null;
 
+			var GameFocusBoost = false;
 
-			Menu.Easy +=
-				delegate
-				{
-					if (Game != null)
-						Game.Orphanize();
-
-					Game = new SpiderGame(LevelEasy).AttachTo(Content);
-					Game.MyDeck.Sounds = Sounds;
-				};
-
-			Menu.Medium +=
-				delegate
-				{
-					if (Game != null)
-						Game.Orphanize();
-
-					Game = new SpiderGame(LevelMedium).AttachTo(Content);
-					Game.MyDeck.Sounds = Sounds;
-				};
-
-			Menu.Hard +=
-				delegate
-				{
-					if (Game != null)
-						Game.Orphanize();
-
-					Game = new SpiderGame(LevelHard).AttachTo(Content);
-					Game.MyDeck.Sounds = Sounds;
-				};
-
-			Menu.Show();
-
-			
 
 			new GameSocialLinks(this)
 			{
@@ -146,6 +112,67 @@ namespace AvalonCardGames.Spider.Shared
 					Hyperlink = new Uri( "http://www.stumbleupon.com/submit?url=" + Info.URL)
 				}
 			};
+
+			// Select a difficulty for a new game!
+
+			// redefine the ctor to fit our context
+			Func<string, string, string, GameMenu.Option> Option =
+				(Text, Image, href) =>
+					new GameMenu.Option
+					{
+						Text = "Play " + Text + "!",
+						Source = (KnownAssets.Path.Assets + "/" + Image + ".png").ToSource(),
+						Hyperlink = new Uri(href),
+						MarginAfter = Math.PI / 4
+					};
+
+			Func<string, string, Func<SpiderGame>, GameMenu.Option> Level =
+				(Text, Image, ctor) =>
+					new GameMenu.Option
+					{
+						Text = Text,
+						Source = (KnownAssets.Path.Assets + "/" + Image + ".png").ToSource(),
+						MarginAfter = Math.PI / 4,
+						Click = 
+							delegate
+							{
+								GameFocusBoost = true;
+
+								Game.Orphanize();
+								Game = ctor();
+								Game.AttachTo(Content);
+								Game.MyDeck.Sounds = Sounds;
+
+								Menu.Hide();
+
+								500.AtDelay(() => GameFocusBoost = false);
+							}
+					};
+
+			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowHeight)
+			{
+				Level("Play easy Spider Solitaire!", "PreviewEasy", () =>  new SpiderGame(LevelEasy)),
+				Level("Play medium Spider Solitaire!", "PreviewMedium", () =>  new SpiderGame(LevelMedium)),
+				Level("Play hard Spider Solitaire!", "PreviewHard", () =>  new SpiderGame(LevelHard)),
+				
+				//Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
+
+				Option("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt").Apply(k => k.MarginBefore = Math.PI / 4),
+				Option("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp"),
+				Option("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer"),
+				Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
+
+			};
+
+			Menu.AttachContainerTo(this);
+
+
+			Menu.ValidateHide = () => Game != null;
+			Menu.ValidateShow = () => !GameFocusBoost;
+
+
+			Menu.Show();
+
 		}
 
 

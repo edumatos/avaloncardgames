@@ -15,7 +15,7 @@ namespace AvalonCardGames.FreeCell.ActionScript
 	/// </summary>
 	[Script, ScriptApplicationEntryPoint(Width = TargetCanvas.DefaultWidth, Height = TargetCanvas.DefaultHeight)]
 	[SWF(width = TargetCanvas.DefaultWidth, height = TargetCanvas.DefaultHeight, backgroundColor = 0)]
-	public class FreeCellFlash : Sprite
+	public partial class FreeCellFlash : Sprite
 	{
 		public FreeCellFlash()
 		{
