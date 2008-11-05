@@ -30,16 +30,18 @@ namespace AvalonCardGames.FreeCell.Shared
 
 		public const string Blog = "http://zproxy.wordpress.com/";
 
+		public const string MochiAdsVersion = "http://games.mochiads.com/c/g/avalon-freecell/FreeCellFlash.swf";
 
 		public const string Category1 = "lifestyle";
 		public const string Category2 = "funandgames";
 
-		public const string ScreenshotURL = "http://farm4.static.flickr.com/3054/2995453584_f1773af10a.jpg";
-		public const string ScreenshotSmallURL = "http://farm4.static.flickr.com/3054/2995453584_f1773af10a_m.jpg";
+		public const string ScreenshotURL = "http://farm4.static.flickr.com/3016/3005649344_e6dc92eb80_o.png";
+		public const string ScreenshotSmallURL = "http://farm4.static.flickr.com/3016/3005649344_8c437f2d23_m.jpg";
 
 
 		//public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/Mahjong_Multiplayer.xml";
-		public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonSpiderSolitaire.xml";
+		//public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonSpiderSolitaire.xml";
+		public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonFreeCell.xml";
 
 
 		public const string GoogleGadgetAddLink = "http://fusion.google.com/ig/add?synd=open&source=ggyp&moduleurl=" + GoogleGadget;
@@ -54,7 +56,7 @@ namespace AvalonCardGames.FreeCell.Shared
 		//public const string GoogleModulesLink = "http://googlemodules.com/module/7424/";
 
 
-		public const string NewgroundsLink = "http://www.newgrounds.com/portal/view/467809";
+		public const string NewgroundsLink = "http://www.newgrounds.com/portal/view/468294";
 		//public const string MochiAdsLink = "http://www.mochiads.com/games/mahjong-multiplayer/";
 
 	}		

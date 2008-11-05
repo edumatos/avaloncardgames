@@ -46,17 +46,35 @@ namespace AvalonCardGames.Menu.Shared
 				BorderThickness = new Thickness(0),
 				IsReadOnly = true,
 
-			}.MoveTo(0, Height / 2).AttachTo(this);
+			}.MoveTo(0, Height / 3).AttachTo(this);
+
+			var CardsLeftBox = new TextBox
+			{
+				Width = Width,
+				TextAlignment = System.Windows.TextAlignment.Center,
+				Foreground = Brushes.White,
+				Background = Brushes.Transparent,
+				BorderThickness = new Thickness(0),
+				IsReadOnly = true,
+
+			}.MoveTo(0, Height * 2 / 3).AttachTo(this);
 
 			Update = delegate
 			{
-				ScoreBox.Text = "Score: " + Score;
-				MovesBox.Text = "Moves: " + Moves;
+				if (Score >= 0)
+					ScoreBox.Text = "Score: " + Score;
+
+				if (Moves >= 0)
+					MovesBox.Text = "Moves: " + Moves;
+
+				if (CardsLeft >= 0)
+					CardsLeftBox.Text = "Cards left: " + CardsLeft;
 			};
 		}
 
 		public int Moves { get; set; }
 		public int Score { get; set; }
+		public int CardsLeft { get; set; }
 
 		public readonly Action Update;
 	}
