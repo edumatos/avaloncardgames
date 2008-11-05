@@ -36,13 +36,7 @@ namespace AvalonCardGames.Menu.Shared
 
 			internal SimpleCarouselControl.EntryInfo CarouselEntry;
 
-			//public Option()
-			//{
-			//    // Fixme: jsc:actionscript should initialize them instead of me
-
-			//    this.MarginAfter = 0;
-			//    this.MarginBefore = 0;
-			//}
+	
 		}
 
 		internal readonly BindingList<Option> Options = new BindingList<Option>();
@@ -150,7 +144,6 @@ namespace AvalonCardGames.Menu.Shared
 			);
 
 
-			var GameCounter = 0;
 
 			Carousel.AttachContainerTo(this);
 
@@ -181,6 +174,7 @@ namespace AvalonCardGames.Menu.Shared
 
 			var Delayed = this.Container.ToDelayedMouseEvents();
 
+			Delayed.ValidateMouseEnter = () => ValidateShow();
 			Delayed.ValidateMouseLeave = () => ValidateHide();
 			Delayed.MouseEnter += Show;
 			Delayed.MouseLeave += Hide;
@@ -195,6 +189,7 @@ namespace AvalonCardGames.Menu.Shared
 		public readonly Action Hide;
 
 		public Func<bool> ValidateHide = () => true;
+		public Func<bool> ValidateShow = () => true;
 
 		#region IEnumerable<Option> Members
 
