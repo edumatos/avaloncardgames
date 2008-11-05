@@ -77,9 +77,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FreeCellFlash.MochiAds.cs" />
     <Compile Include="FreeCellGame.cs" />
     <Compile Include="FreeCellFlash.cs" />
     <Compile Include="FreeCellDocument.cs" />
+    <Compile Include="Info.cs" />
     <Compile Include="KnownAssets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +129,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="web\assets\AvalonCardGames.FreeCell\Preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web\assets\AvalonCardGames.FreeCell\Screenshot.png" />
+    <Content Include="web\assets\AvalonCardGames.FreeCell\x100.png" />
+    <Content Include="web\assets\AvalonCardGames.FreeCell\x46.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

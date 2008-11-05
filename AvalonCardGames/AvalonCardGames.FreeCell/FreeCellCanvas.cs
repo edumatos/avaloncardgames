@@ -90,6 +90,9 @@ namespace AvalonCardGames.FreeCell.Shared
 
 							Game.Orphanize();
 							Game = PreviousGame.AttachTo(Content);
+
+							if (Game == null)
+								this.Menu.Show();
 						},
 						delegate
 						{
@@ -98,6 +101,9 @@ namespace AvalonCardGames.FreeCell.Shared
 
 							Game.Orphanize();
 							Game = CurrentGame.AttachTo(Content);
+
+							if (Game != null)
+								this.Menu.Hide();
 						}
 					);
 				};
@@ -136,7 +142,7 @@ namespace AvalonCardGames.FreeCell.Shared
 			{
 				new GameMenu.Option
 				{
-					Text = "Play new FreeCell game!",
+					Text = "FreeCell - medium difficulty",
 					Source = (KnownAssets.Path.Assets + "/Preview.png").ToSource(),
 					MarginAfter = Math.PI / 2,
 					Click =
@@ -161,7 +167,6 @@ namespace AvalonCardGames.FreeCell.Shared
 			this.Menu.ValidateHide = () => Game != null;
 			this.Menu.ValidateShow = () => !GameFocusBoost;
 
-			this.Menu.Carousel.Caption.Text = "Select a game to play!";
 			this.Menu.AttachContainerTo(this);
 
 			this.History.AttachContainerTo(this);

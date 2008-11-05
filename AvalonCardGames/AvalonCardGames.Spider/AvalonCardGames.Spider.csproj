@@ -90,7 +90,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IAssemblyReferenceToken.cs" />
     <Compile Include="SpiderCanvas.cs" />
-    <Compile Include="GameMenu.cs" />
     <Compile Include="StatusControl.cs" />
   </ItemGroup>
   <ItemGroup>

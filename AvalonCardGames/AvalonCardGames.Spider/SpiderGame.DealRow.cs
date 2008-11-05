@@ -67,62 +67,64 @@ namespace AvalonCardGames.Spider.Shared
 
 			}
 
-			System.Console.WriteLine("reordering cards, and animating...");
-
-			ToBeAnimated.ForEachReversed((c) => c.BringToFront());
-
-			Console.WriteLine("cards to be animated: " + ToBeAnimated.Count);
-
-			Action NextCard = null;
-
-			NextCard =
-				delegate
+			this.MyDeck.AnimatedMoveToChain.Continue(
+				SignalNext =>
 				{
-					if (ToBeAnimated.Count > 0)
-					{
-						var c = ToBeAnimated.Dequeue();
 
-						this.MyDeck.Sounds.deal();
+					var SignalNextDelayed = SignalNext.WhereCounter(i => ToBeAnimated.Count == 0);
 
-						//MySounds.PlaySoundDeal();
+					System.Console.WriteLine("reordering cards, and animating...");
 
-						var p = c.LocationInStack;
+					ToBeAnimated.ForEachReversed((c) => c.BringToFront());
 
-						c.AnimatedMoveTo(
+					Console.WriteLine("cards to be animated: " + ToBeAnimated.Count);
 
-							Convert.ToInt32(p.X),
-							Convert.ToInt32(p.Y)
-							);
+					Action NextCard = null;
 
-
-						//delegate
-						//{
-						//    c.Drag.Enabled = true;
-						CheckForGoodSuit(c.CurrentStack);
-
-						if (ToBeAnimated.Count == 0)
+					NextCard =
+						delegate
 						{
-							DealingStack.Container.Hide();
+							if (ToBeAnimated.Count > 0)
+							{
+								var c = ToBeAnimated.Dequeue();
 
-							//MyStatus.Ready = true;
-
-							System.Console.WriteLine("done...");
-
-							if (done != null)
-								done();
-							//Helper.Invoke(done);
-						}
-						else
-						{
-							300.AtDelay(NextCard);
-						}
-						//});
-					}
+								this.MyDeck.Sounds.deal();
 
 
-				};
+								var p = c.LocationInStack;
 
-			NextCard();
+								c.AnimatedMoveTo(
+
+									Convert.ToInt32(p.X),
+									Convert.ToInt32(p.Y),
+									SignalNextDelayed
+									);
+
+
+								CheckForGoodSuit(c.CurrentStack);
+
+								if (ToBeAnimated.Count == 0)
+								{
+									DealingStack.Container.Hide();
+
+
+									System.Console.WriteLine("done...");
+
+									if (done != null)
+										done();
+								}
+								else
+								{
+									300.AtDelay(NextCard);
+								}
+							}
+
+
+						};
+
+					NextCard();
+				}
+			);
 
 		}
 

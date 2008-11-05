@@ -36,8 +36,10 @@ namespace AvalonCardGames.Menu.Shared
 
 			internal SimpleCarouselControl.EntryInfo CarouselEntry;
 
-	
+
 		}
+
+		public string IdleText = "Select a difficulty for a new game!";
 
 		internal readonly BindingList<Option> Options = new BindingList<Option>();
 
@@ -91,29 +93,34 @@ namespace AvalonCardGames.Menu.Shared
 
 			this.Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
 
-			var Idle = "Select a difficulty for a new game!";
+			
 
 			Carousel.Caption.FontSize = 36;
 			Carousel.Caption.Height = 60;
-			Carousel.Caption.Text = Idle;
+			Carousel.Caption.Text = IdleText;
 
 			Action<int, int> AnimatedShadowOpacity = NumericEmitter.Of(
 				(x, y) => ShadowContainer.Opacity = x * 0.01
 			);
 
-			AnimatedShadowOpacity(50, 0);
+			var ShadowOpacity = 50;
+
+			AnimatedShadowOpacity(ShadowOpacity, 0);
+
 
 			Carousel.Hover +=
 				delegate
 				{
-					AnimatedShadowOpacity(70, 0);
+					ShadowOpacity = 70;
+					AnimatedShadowOpacity(ShadowOpacity, 0);
 				};
 
 			Carousel.Idle +=
 				delegate
 				{
-					Carousel.Caption.Text = Idle;
-					AnimatedShadowOpacity(50, 0);
+					Carousel.Caption.Text = IdleText;
+					ShadowOpacity = 50;
+					AnimatedShadowOpacity(ShadowOpacity, 0);
 				};
 
 			this.Options.ForEachNewItem(
@@ -149,7 +156,7 @@ namespace AvalonCardGames.Menu.Shared
 
 			Carousel.Overlay.AttachTo(this);
 
-	
+
 
 			Action<int, int> AnimatedTop = NumericEmitter.Of(
 				(x, y) => this.Container.MoveTo(0, y)
@@ -162,7 +169,8 @@ namespace AvalonCardGames.Menu.Shared
 			{
 				Carousel.Show();
 				AnimatedTop(0, 0);
-				AnimatedShadowOpacity(50, 0);
+
+				AnimatedShadowOpacity(ShadowOpacity, 0);
 			};
 
 			this.Hide = delegate

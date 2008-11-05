@@ -52,27 +52,34 @@ namespace AvalonCardGames.Spider.Shared
 			this.MyStatus.Score += 100;
 			this.MyStatus.Update();
 
-			a.Reverse().ForEach(
-				(Current, SignalNext) =>
+			this.MyDeck.AnimatedMoveToChain.Continue(
+				SignalNextInChain =>
 				{
-					MyDeck.Sounds.deal();
+					a.Reverse().ForEach(
+						(Current, SignalNext) =>
+						{
+							MyDeck.Sounds.deal();
 
-					Current.BringToFront();
+							Current.BringToFront();
 
-					MyStatus.Moves--;
+							MyStatus.Moves--;
 
-					Current.AttachToStack(Destination);
+							Current.AttachToStack(Destination);
 
-					Current.AnimatedMoveTo(Current.LocationInStack);
+							Current.AnimatedMoveTo(Current.LocationInStack);
 
-					200.AtDelay(SignalNext);
-				}
-			)(
-				delegate
-				{
-					System.Console.WriteLine("good suit cleared from deck!");
+							200.AtDelay(SignalNext);
+						}
+					)(
+						delegate
+						{
+							System.Console.WriteLine("good suit cleared from deck!");
 
-					CheckForWin();
+							CheckForWin();
+
+							SignalNextInChain();
+						}
+					);
 				}
 			);
 		}
