@@ -10,17 +10,47 @@ using ScriptCoreLib.Shared.Avalon.Carousel;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Avalon.Tween;
 using ScriptCoreLib.Shared.Lambda;
+using System.ComponentModel;
 
 namespace AvalonCardGames.Menu.Shared
 {
 	[Script]
-	public class GameMenu : ISupportsContainer
+	public class GameMenu : ISupportsContainer, IEnumerable<GameMenu.Option>
 	{
 		public Canvas Container { get; set; }
 
-		//public event Action Easy;
-		//public event Action Medium;
-		//public event Action Hard;
+
+		[Script]
+		public class Option
+		{
+			public ImageSource Source;
+
+			public string Text;
+
+			public Action Click;
+
+			public Uri Hyperlink;
+
+			public double MarginBefore;
+			public double MarginAfter;
+
+			internal SimpleCarouselControl.EntryInfo CarouselEntry;
+
+			public Option()
+			{
+				// Fixme: jsc:actionscript should initialize them instead of me
+
+				this.MarginAfter = 0;
+				this.MarginBefore = 0;
+			}
+		}
+
+		internal readonly BindingList<Option> Options = new BindingList<Option>();
+
+		public void Add(Option e)
+		{
+			Options.Add(e);
+		}
 
 		public GameMenu(int Width, int Height, int ShadowHeight)
 		{
@@ -89,6 +119,33 @@ namespace AvalonCardGames.Menu.Shared
 					Carousel.Caption.Text = Idle;
 					//AnimatedShadowOpacity(50, 0);
 				};
+
+			this.Options.ForEachNewItem(
+				e =>
+				{
+					double p = 0;
+
+					this.Where(k => k != e).LastOrDefault().Apply(k => p = k.CarouselEntry.Position + k.MarginAfter);
+
+					e.CarouselEntry = new SimpleCarouselControl.EntryInfo
+					{
+						Source = e.Source,
+						Text = e.Text,
+						Position = p + e.MarginBefore,
+						Click =
+							delegate
+							{
+								if (e.Click != null)
+									e.Click();
+
+								if (e.Hyperlink != null)
+									e.Hyperlink.NavigateTo();
+							}
+					};
+
+					Carousel.AddEntry(e.CarouselEntry);
+				}
+			);
 
 			//Carousel.AddEntry(
 			//    new SimpleCarouselControl.EntryInfo
@@ -188,5 +245,23 @@ namespace AvalonCardGames.Menu.Shared
 		public readonly Action Hide;
 
 		public Func<bool> ValidateHide = () => true;
+
+		#region IEnumerable<Option> Members
+
+		public IEnumerator<GameMenu.Option> GetEnumerator()
+		{
+			return this.Options.GetEnumerator();
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.Options.GetEnumerator();
+		}
+
+		#endregion
 	}
 }

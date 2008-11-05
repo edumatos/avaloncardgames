@@ -82,7 +82,25 @@ namespace AvalonCardGames.FreeCell.Shared
 				}
 			};
 
-			var menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize);
+			// redefine the ctor to fit our context
+			Func<string, string, string, GameMenu.Option> Option =
+				(Text, Image, href) =>
+					new GameMenu.Option
+					{
+						Text = Text,
+						Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
+						Hyperlink = new Uri(href),
+						MarginAfter = Math.PI / 4
+					};
+
+			var menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
+			{
+				Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
+				Option("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt"),
+				Option("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp"),
+				Option("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer"),
+				Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
+			};
 
 			menu.AttachContainerTo(this);
 
