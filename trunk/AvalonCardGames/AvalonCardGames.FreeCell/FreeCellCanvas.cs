@@ -117,13 +117,13 @@ namespace AvalonCardGames.FreeCell.Shared
 					Source = (KnownAssets.Path.Assets + "/plus_google.png").ToSource(),
 					Width = 62,
 					Height = 17,
-					Hyperlink = new Uri("http://fusion.google.com")
+					Hyperlink = new Uri(Info.GoogleGadgetAddLink)
 				},
 				new GameSocialLinks.Button { 
 					Source = (KnownAssets.Path.Assets + "/su.png").ToSource(),
 					Width = 16,
 					Height = 16,
-					Hyperlink = new Uri("http://www.stumbleupon.com/")
+					Hyperlink = new Uri( "http://www.stumbleupon.com/submit?url=" + Info.URL)
 				}
 			};
 

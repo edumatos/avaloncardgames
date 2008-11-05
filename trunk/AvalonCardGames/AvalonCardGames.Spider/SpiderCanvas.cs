@@ -133,7 +133,7 @@ namespace AvalonCardGames.Spider.Shared
 						Text = Text,
 						Source = (KnownAssets.Path.Assets + "/" + Image + ".png").ToSource(),
 						MarginAfter = Math.PI / 4,
-						Click = 
+						Click =
 							delegate
 							{
 								GameFocusBoost = true;

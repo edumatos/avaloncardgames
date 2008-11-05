@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.FreeCell", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Menu", "AvalonCardGames.Menu\AvalonCardGames.Menu.csproj", "{04696836-64F2-4132-9925-907B204B41BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.FreeCell.XBAP", "AvalonCardGames.FreeCell.XBAP\AvalonCardGames.FreeCell.XBAP.csproj", "{C2F2B70A-382E-4227-B555-DC051C244396}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{04696836-64F2-4132-9925-907B204B41BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04696836-64F2-4132-9925-907B204B41BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04696836-64F2-4132-9925-907B204B41BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2F2B70A-382E-4227-B555-DC051C244396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F2B70A-382E-4227-B555-DC051C244396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F2B70A-382E-4227-B555-DC051C244396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F2B70A-382E-4227-B555-DC051C244396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -34,9 +34,10 @@ namespace AvalonCardGames.FreeCell.Shared
 		BindingList<CardStack> PlayStacks;
 
 		readonly StatusControl MyStatus;
+		public event Action GameOver;
 
 
-		public bool Cheat = true;
+		public bool Cheat = false;
 
 		public FreeCellGame()
 		{
@@ -45,6 +46,22 @@ namespace AvalonCardGames.FreeCell.Shared
 
 
 			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
+
+			var GameOverBox = new TextBox
+			{
+				Width = DefaultWidth,
+				TextAlignment = System.Windows.TextAlignment.Center,
+				Foreground = Brushes.White,
+				Background = Brushes.Transparent,
+				BorderThickness = new Thickness(0),
+				IsReadOnly = true,
+				FontSize = 24,
+			}.MoveTo(0, DefaultHeight / 2).AttachTo(this);
+
+			GameOver += delegate
+			{
+				GameOverBox.Text = "Congratulations! You Won!";
+			};
 
 			#region king
 			var KingCanvas = new Canvas
@@ -100,7 +117,8 @@ namespace AvalonCardGames.FreeCell.Shared
 				(DefaultWidth - StatusControl.Width) / 2,
 				(DefaultHeight - StatusControl.Height)
 			);
-			this.MyStatus.Update();
+
+
 
 			//this.MyStatus.Container.Hide();
 
@@ -115,9 +133,9 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
 
-
-
-
+			this.MyStatus.CardsLeft = MyDeck.UnusedCards.Count;
+			this.MyStatus.Score = -1;
+			this.MyStatus.Update();
 
 			System.Console.WriteLine("creating stacklists... ");
 
@@ -132,6 +150,28 @@ namespace AvalonCardGames.FreeCell.Shared
 
 			TempStacks = MyDeck.CreateStackList();
 
+			Func<bool> Rule_WinConditionMet =
+				delegate
+				{
+					if (PlayStacks.All(s => s.Cards.Count > 0))
+						return false;
+
+					if (TempStacks.All(s => s.Cards.Count == 0))
+						return false;
+
+					return true;
+				};
+
+			Action MyStatus_UpdateCardsLeft =
+				delegate
+				{
+
+					MyStatus.CardsLeft = 0;
+
+					PlayStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count); 
+					TempStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count); 
+				};
+
 			GoalStacks = MyDeck.CreateStackList();
 			GoalStacks.ForEachNewItem(
 				k =>
@@ -141,22 +181,31 @@ namespace AvalonCardGames.FreeCell.Shared
 					k.Cards.ForEachNewItem(
 						card =>
 						{
+
 							if (card.Info.Rank == CardInfo.RankEnum.RankKing)
 							{
 								KingSmile.Show();
 
 								card.VisibleSide = Card.SideEnum.BackSide;
 
-								if (PlayStacks.All(s => s.Cards.Count == 0) && GoalStacks.All(s => s.Cards.Count == 0))
+
+								if (Rule_WinConditionMet())
 								{
 									// winner!
 									MyDeck.Sounds.win();
+
+									if (this.GameOver != null)
+										this.GameOver();
 								}
 								else
 								{
 									600.AtDelay(KingSmile.Hide);
 								}
 							}
+
+
+							MyStatus_UpdateCardsLeft();
+							MyStatus.Update();
 						}
 					);
 				}
@@ -214,22 +263,38 @@ namespace AvalonCardGames.FreeCell.Shared
 						History.History.Add(
 							delegate
 							{
+								
+
 								// we already are at the state we want to be
 								if (card.CurrentStack == FrozenTokens.PreviousStack)
 									return;
 
+								card.VisibleSide = Card.SideEnum.TopSide;
 								card.AnimatedMoveToStack(FrozenTokens.PreviousStack, null);
-								
+
+
 								this.MyDeck.Sounds.deal();
+
+								MyStatus.Moves--;
+								MyStatus_UpdateCardsLeft();
+								MyStatus.Update();
 							},
 							delegate
 							{
+								MyStatus.Moves++;
+								MyStatus.Update();
+
 								// we already are at the state we want to be
 								if (card.CurrentStack == FrozenTokens.CurrentStack)
 									return;
 
+
+
 								card.AnimatedMoveToStack(FrozenTokens.CurrentStack, null);
 								this.MyDeck.Sounds.deal();
+
+
+								
 							}
 						);
 					};
