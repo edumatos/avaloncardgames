@@ -45,7 +45,7 @@ namespace AvalonCardGames.Solitaire.Shared
 				(DefaultWidth - StatusControl.Width) / 2,
 				(DefaultHeight - StatusControl.Height)
 			);
-			
+
 
 			var GameOverBox = new TextBox
 			{
@@ -64,7 +64,7 @@ namespace AvalonCardGames.Solitaire.Shared
 			this.MyDeck.AttachContainerTo(this);
 			this.MyDeck.GetRank = e => (int)RankMapping[e];
 
-		
+
 			System.Console.WriteLine("adding card infos... ");
 
 			MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
@@ -144,7 +144,7 @@ namespace AvalonCardGames.Solitaire.Shared
 
 
 
-
+			#region rules
 			Func<bool> Rule_WinConditionMet =
 				delegate
 				{
@@ -190,7 +190,7 @@ namespace AvalonCardGames.Solitaire.Shared
 					return true;
 				};
 
-
+			#endregion
 
 			MyDeck.ApplyCardRules += delegate(Card card)
 			{
@@ -252,12 +252,14 @@ namespace AvalonCardGames.Solitaire.Shared
 					};
 			};
 
-		
-			
+
+
 			GoalStacks.ForEachNewItem(
 				s =>
 				{
-					s.CardMargin = new Vector();
+					s.CardMargin.X = 0;
+					s.CardMargin.Y = 0;
+
 					s.Cards.ForEachNewItem(
 						card =>
 						{
@@ -311,6 +313,12 @@ namespace AvalonCardGames.Solitaire.Shared
 				card => card.VisibleSide = Card.SideEnum.TopSide
 			);
 
+			ChoiceStack.Click +=
+				delegate
+				{
+					ChoiceStack.Update();
+				}
+			;
 
 			ReserveStack.Overlay.Cursor = Cursors.Hand;
 			ReserveStack.Cards.ForEachNewItem(
@@ -318,8 +326,8 @@ namespace AvalonCardGames.Solitaire.Shared
 			);
 
 
-		
-		
+
+
 
 			var ReserveStackEnabled = true;
 
@@ -353,7 +361,7 @@ namespace AvalonCardGames.Solitaire.Shared
 					{
 						ReserveStackEnabled = false;
 
-						
+
 						ChoiceStack.Cards.ToArray().ForEach(
 							card =>
 							{
