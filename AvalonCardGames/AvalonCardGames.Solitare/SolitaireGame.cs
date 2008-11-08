@@ -121,21 +121,9 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			var Margin = (DefaultWidth - CardInfo.Width * 7) / 8;
 
-			var ReserveStack = new CardStack
-			{
-				CardMargin = new Vector()
-			}.MoveTo(Margin, Margin);
-
-			var UsedChoiceStack = new CardStack
-			{
-				CardMargin = new Vector()
-			}.MoveTo(Margin + CardInfo.Width + Margin, Margin);
-
-
-			var ChoiceStack = new CardStack
-			{
-				CardMargin = new Vector { X = 20 }
-			}.MoveTo(Margin + CardInfo.Width + Margin, Margin);
+			var ReserveStack = new CardStack().MoveTo(Margin, Margin);
+			var UsedChoiceStack = new CardStack().MoveTo(Margin + CardInfo.Width + Margin, Margin);
+			var ChoiceStack = new CardStack().MoveTo(Margin + CardInfo.Width + Margin, Margin);
 
 
 			TempStacks.AddRange(
@@ -143,6 +131,19 @@ namespace AvalonCardGames.Solitaire.Shared
 				UsedChoiceStack,
 				ChoiceStack
 			);
+
+
+			ReserveStack.CardMargin.X = 0;
+			ReserveStack.CardMargin.Y = 0;
+
+			UsedChoiceStack.CardMargin.X = 0;
+			UsedChoiceStack.CardMargin.Y = 0;
+
+			ChoiceStack.CardMargin.X = 20;
+			ChoiceStack.CardMargin.Y = 0;
+
+
+
 
 			Func<bool> Rule_WinConditionMet =
 				delegate
@@ -352,14 +353,14 @@ namespace AvalonCardGames.Solitaire.Shared
 					{
 						ReserveStackEnabled = false;
 
-						UsedChoiceStack.Update();
-						ChoiceStack.FirstOrDefault().Apply(
+						
+						ChoiceStack.Cards.ToArray().ForEach(
 							card =>
 							{
-								card.AnimatedMoveToStack(UsedChoiceStack, null, null);
+								card.AttachToStack(UsedChoiceStack);
 							}
 						);
-
+						UsedChoiceStack.Update();
 
 						3.Times(
 							SignalNext =>

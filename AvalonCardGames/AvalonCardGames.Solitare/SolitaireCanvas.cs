@@ -102,11 +102,13 @@ namespace AvalonCardGames.Solitaire.Shared
 						{
 							GameFocusBoost = true;
 
-							this.Menu.Hide();
-
 							Game.Orphanize();
 							Game = new SolitaireGame().AttachTo(Content);
 							Game.MyDeck.Sounds = this.Sounds;
+
+							this.Menu.Hide();
+
+					
 
 							500.AtDelay(() => GameFocusBoost = false);
 						}
