@@ -7,30 +7,28 @@ namespace AvalonCardGames.Solitaire.Shared
 {
 	public class Info
 	{
-		// rules: http://www.freecell.org/rules.html
-		// wiki: http://en.wikipedia.org/wiki/Jim_Horne
-		// wiki: http://en.wikipedia.org/wiki/Freecell
+		// http://en.wikipedia.org/wiki/Klondike_(solitaire)
 
-		public const string Title = "Avalon FreeCell";
+		public const string Title = "Avalon Solitaire";
 
-		public const string Description = "Remake of the classic FreeCell";
+		public const string Description = "Remake of the classic Solitaire";
 
-		public const string Instructions = "FreeCell is a solitaire card game played with a 52-card standard deck.";
+		public const string Instructions = "Taking a standard 52-card deck of playing cards (without Jokers) one upturned card is dealt on the left of the playing area, then six downturned cards (from left to right).";
 
 		public const string Dimensions = "800x600";
 
 
-		public const string Keywords = "freecell, solitaire, card";
+		public const string Keywords = "klondike, solitaire, card";
 
 		public const string EMail = "dadeval@gmail.com";
 
-		public const string URL = "http://nonoba.com/zproxy/avalon-freecell";
+		public const string URL = "http://nonoba.com/zproxy/avalon-solitaire";
 
 		public const string Author = "Arvo Sulakatko";
 
 		public const string Blog = "http://zproxy.wordpress.com/";
 
-		public const string MochiAdsVersion = "http://games.mochiads.com/c/g/avalon-freecell/FreeCellFlash.swf";
+		public const string MochiAdsVersion = "http://games.mochiads.com/c/g/avalon-solitaire/SolitaireFlash.swf";
 
 		public const string Category1 = "lifestyle";
 		public const string Category2 = "funandgames";

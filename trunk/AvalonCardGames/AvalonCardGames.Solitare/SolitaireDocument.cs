@@ -19,14 +19,21 @@ namespace AvalonCardGames.Solitaire.JavaScript
 		{
 			Native.Document.body.style.backgroundColor = Color.Black;
 
-			var c = new IHTMLElement(IHTMLElement.HTMLElementEnum.center);
+			// wpf here
+			var clip = new IHTMLDiv();
+
+			clip.style.position = ScriptCoreLib.JavaScript.DOM.IStyle.PositionEnum.relative;
+			clip.style.SetSize(TargetCanvas.DefaultWidth, TargetCanvas.DefaultHeight);
+			clip.style.overflow = ScriptCoreLib.JavaScript.DOM.IStyle.OverflowEnum.hidden;
+
+			var c = new IHTMLElement(IHTMLElement.HTMLElementEnum.center, clip);
 
 			if (e == null)
 				c.AttachToDocument();
 			else
 				e.insertPreviousSibling(c);
 
-			new TargetCanvas().AttachToContainer(c);
+			new TargetCanvas().AttachToContainer(clip);
 
 		}
 
