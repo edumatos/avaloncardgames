@@ -7,8 +7,8 @@
     <ProjectGuid>{46B01241-7DD5-489C-A20A-22BA34F50437}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AvalonCardGames.Solitare</RootNamespace>
-    <AssemblyName>AvalonCardGames.Solitare</AssemblyName>
+    <RootNamespace>AvalonCardGames.Solitaire</RootNamespace>
+    <AssemblyName>AvalonCardGames.Solitaire</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -69,15 +69,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SolitareFlash.cs" />
-    <Compile Include="SolitareDocument.cs" />
+    <Compile Include="SolitaireGame.RankMapping.cs" />
+    <Compile Include="SolitaireGame.cs" />
+    <Compile Include="SolitaireFlash.cs" />
+    <Compile Include="SolitarieDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IAssemblyReferenceToken.cs" />
-    <Compile Include="SolitareCanvas.cs" />
+    <Compile Include="SolitaireCanvas.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tools\build.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AvalonCardGames.Menu\AvalonCardGames.Menu.csproj">
+      <Project>{04696836-64F2-4132-9925-907B204B41BA}</Project>
+      <Name>AvalonCardGames.Menu</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="web\assets\AvalonCardGames.Solitare.SocialLinks\" />
+    <Folder Include="web\assets\AvalonCardGames.Solitare\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

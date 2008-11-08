@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Labs", "AvalonCardGames.Labs\AvalonCardGames.Labs.csproj", "{26898714-043F-4B3B-9175-E15883E8A5BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Solitare", "AvalonCardGames.Solitare\AvalonCardGames.Solitare.csproj", "{46B01241-7DD5-489C-A20A-22BA34F50437}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Solitaire", "AvalonCardGames.Solitare\AvalonCardGames.Solitaire.csproj", "{46B01241-7DD5-489C-A20A-22BA34F50437}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Spider", "AvalonCardGames.Spider\AvalonCardGames.Spider.csproj", "{A3E3ED34-4C8F-4733-832F-59A0506F68D7}"
 EndProject
