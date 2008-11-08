@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using AvalonCardGames.Menu.Shared;
 using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
-using System.Windows.Input;
 
 namespace AvalonCardGames.Solitaire.Shared
 {
@@ -30,6 +31,8 @@ namespace AvalonCardGames.Solitaire.Shared
 		BindingList<CardStack> GoalStacks;
 		BindingList<CardStack> PlayStacks;
 		public bool Cheat = false;
+		readonly StatusControl MyStatus;
+		public event Action GameOver;
 
 		public SolitaireGame()
 		{
@@ -38,6 +41,22 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			System.Console.WriteLine("--- solitare ---");
 
+			this.MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
+				(DefaultWidth - StatusControl.Width) / 2,
+				(DefaultHeight - StatusControl.Height)
+			);
+			
+
+			var GameOverBox = new TextBox
+			{
+				Width = DefaultWidth,
+				TextAlignment = System.Windows.TextAlignment.Center,
+				Foreground = Brushes.White,
+				Background = Brushes.Transparent,
+				BorderThickness = new Thickness(0),
+				IsReadOnly = true,
+				FontSize = 24,
+			}.MoveTo(0, DefaultHeight / 2).AttachTo(this);
 
 
 			// add autoscroll ?
@@ -45,9 +64,15 @@ namespace AvalonCardGames.Solitaire.Shared
 			this.MyDeck.AttachContainerTo(this);
 			this.MyDeck.GetRank = e => (int)RankMapping[e];
 
+		
 			System.Console.WriteLine("adding card infos... ");
 
 			MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
+
+			this.MyStatus.Score = -1;
+			this.MyStatus.CardsLeft = this.MyDeck.UnusedCards.Count;
+			this.MyStatus.Update();
+
 
 			MyDeck.Stacks.ListChanged +=
 				(sender, args) =>
@@ -78,7 +103,6 @@ namespace AvalonCardGames.Solitaire.Shared
 						(sender, args) =>
 						{
 							if (args.ListChangedType == ListChangedType.ItemDeleted)
-								//if (MyStatus.Ready)
 								s.RevealLastCard();
 						};
 
@@ -86,9 +110,11 @@ namespace AvalonCardGames.Solitaire.Shared
 			);
 
 
-			GoalStacks.ForEachNewItem(
-				Stack => Stack.CardMargin = new Vector()
-			);
+
+			GameOver += delegate
+			{
+				GameOverBox.Text = "Congratulations! You Won!";
+			};
 
 
 			System.Console.WriteLine("creating goalstack... ");
@@ -118,6 +144,17 @@ namespace AvalonCardGames.Solitaire.Shared
 				ChoiceStack
 			);
 
+			Func<bool> Rule_WinConditionMet =
+				delegate
+				{
+					if (PlayStacks.All(s => s.Cards.Count > 0))
+						return false;
+
+					if (TempStacks.All(s => s.Cards.Count == 0))
+						return false;
+
+					return true;
+				};
 
 			Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
 				(Previous, Current) =>
@@ -156,6 +193,14 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			MyDeck.ApplyCardRules += delegate(Card card)
 			{
+				card.MovedByLocalPlayer +=
+					delegate
+					{
+						MyStatus.Moves++;
+						MyStatus.Update();
+
+					};
+
 				card.ValidateDragStart =
 					delegate
 					{
@@ -190,7 +235,7 @@ namespace AvalonCardGames.Solitaire.Shared
 						if (PlayStacks.Contains(CandidateStack))
 						{
 							if (CandidateStack.Cards.Count == 0)
-								return true;
+								return card.Info.Rank == CardInfo.RankEnum.RankKing;
 
 
 							return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
@@ -198,7 +243,6 @@ namespace AvalonCardGames.Solitaire.Shared
 
 						if (GoalStacks.Contains(CandidateStack))
 						{
-				
 							return (RuleForStackingCardsInGoalStack(CandidateStack.Cards.LastOrDefault(), card));
 
 						}
@@ -207,6 +251,37 @@ namespace AvalonCardGames.Solitaire.Shared
 					};
 			};
 
+		
+			
+			GoalStacks.ForEachNewItem(
+				s =>
+				{
+					s.CardMargin = new Vector();
+					s.Cards.ForEachNewItem(
+						card =>
+						{
+							this.MyStatus.CardsLeft--;
+							this.MyStatus.Update();
+
+							if (card.Info.Rank == CardInfo.RankEnum.RankKing)
+							{
+
+								card.VisibleSide = Card.SideEnum.BackSide;
+
+
+								if (Rule_WinConditionMet())
+								{
+									// winner!
+									MyDeck.Sounds.win();
+
+									if (this.GameOver != null)
+										this.GameOver();
+								}
+							}
+						}
+					);
+				}
+			);
 			GoalStacks.AddRange(
 				Enumerable.Range(0, 4).ToArray(
 					i => new CardStack().MoveTo(DefaultWidth - ((CardInfo.Width + Margin) * 4) + i * (CardInfo.Width + Margin), Margin)
@@ -255,6 +330,8 @@ namespace AvalonCardGames.Solitaire.Shared
 
 					if (ReserveStack.Cards.Count == 0)
 					{
+						MyDeck.Sounds.deal();
+
 						ChoiceStack.FirstOrDefault().Apply(
 							card =>
 							{
@@ -294,6 +371,8 @@ namespace AvalonCardGames.Solitaire.Shared
 										Console.WriteLine(card.ToString());
 
 										card.AnimatedMoveToStack(ChoiceStack, null, null);
+
+										MyDeck.Sounds.deal();
 
 										200.AtDelay(SignalNext);
 									}
