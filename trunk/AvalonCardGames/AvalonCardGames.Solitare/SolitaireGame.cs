@@ -22,7 +22,7 @@ namespace AvalonCardGames.Solitaire.Shared
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
-		CardDeck MyDeck = new CardDeck
+		public CardDeck MyDeck = new CardDeck
 		{
 		};
 

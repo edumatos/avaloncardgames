@@ -22,6 +22,8 @@ namespace AvalonCardGames.Solitaire.Shared
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
+		public GameMenu Menu { get; set; }
+		public readonly Sounds Sounds = new Sounds();
 
 		public SolitaireCanvas()
 		{
@@ -30,9 +32,7 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			this.ClipToBounds = true;
 
-			System.Console.WriteLine("--- solitare ---");
 
-		
 			new TiledBackgroundImage(
 				(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
 					64, 64,
@@ -56,7 +56,6 @@ namespace AvalonCardGames.Solitaire.Shared
 				Height = DefaultHeight
 			}.AttachTo(this);
 
-			new SolitaireGame().AttachTo(Content);
 
 			new GameSocialLinks(this)
 			{
@@ -74,6 +73,60 @@ namespace AvalonCardGames.Solitaire.Shared
 				}
 			};
 
+
+			// redefine the ctor to fit our context
+			Func<string, string, string, GameMenu.Option> Option =
+				(Text, Image, href) =>
+					new GameMenu.Option
+					{
+						Text = "Play " + Text + "!",
+						Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
+						Hyperlink = new Uri(href),
+						MarginAfter = Math.PI / 6
+					};
+
+			var Game = default(SolitaireGame);
+			var GameFocusBoost = false;
+
+
+
+			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
+			{
+				new GameMenu.Option
+				{
+					Text = "Solitaire - medium difficulty",
+					Source = (KnownAssets.Path.Assets + "/Preview.png").ToSource(),
+					MarginAfter = 3 * Math.PI / 6,
+					Click =
+						delegate
+						{
+							GameFocusBoost = true;
+
+							this.Menu.Hide();
+
+							Game.Orphanize();
+							Game = new SolitaireGame().AttachTo(Content);
+							Game.MyDeck.Sounds = this.Sounds;
+
+							500.AtDelay(() => GameFocusBoost = false);
+						}
+				},
+				Option("FreeCell", "Preview_FreeCell",  "http://nonoba.com/zproxy/avalon-freecell"),
+				Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
+				Option("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt"),
+				Option("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp"),
+				Option("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer"),
+				Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
+
+				
+			};
+
+			this.Menu.ValidateHide = () => Game != null;
+			this.Menu.ValidateShow = () => !GameFocusBoost;
+
+			this.Menu.AttachContainerTo(this);
+
+			this.Menu.Show();
 		}
 	}
 }
