@@ -6,24 +6,24 @@ using System;
 using ScriptCoreLib.ActionScript;
 using ScriptCoreLib.ActionScript.Extensions;
 
-namespace AvalonCardGames.Solitare.ActionScript
+namespace AvalonCardGames.Solitaire.ActionScript
 {
-	using TargetCanvas = global::AvalonCardGames.Solitare.Shared.SolitareCanvas;
+	using TargetCanvas = global::AvalonCardGames.Solitaire.Shared.SolitaireCanvas;
 
 	/// <summary>
 	/// Default flash player entrypoint class. See 'tools/build.bat' for adding more entrypoints.
 	/// </summary>
 	[Script, ScriptApplicationEntryPoint(Width = TargetCanvas.DefaultWidth, Height = TargetCanvas.DefaultHeight)]
 	[SWF(width = TargetCanvas.DefaultWidth, height = TargetCanvas.DefaultHeight, backgroundColor = 0)]
-	public class SolitareFlash : Sprite
+	public class SolitaireFlash : Sprite
 	{
-		public SolitareFlash()
+		public SolitaireFlash()
 		{
 			// spawn the wpf control
 			AvalonExtensions.AttachToContainer(new TargetCanvas(), this);
 		}
 
-		static SolitareFlash()
+		static SolitaireFlash()
 		{
 			// add resources to be found by ImageSource
 			KnownEmbeddedAssets.RegisterTo(

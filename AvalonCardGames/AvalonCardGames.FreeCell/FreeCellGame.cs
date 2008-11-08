@@ -249,6 +249,7 @@ namespace AvalonCardGames.FreeCell.Shared
 			MyDeck.ApplyCardRules += delegate(Card card)
 			{
 
+				#region MovedByLocalPlayer
 				card.MovedByLocalPlayer +=
 					delegate
 					{
@@ -298,6 +299,8 @@ namespace AvalonCardGames.FreeCell.Shared
 							}
 						);
 					};
+				#endregion
+
 
 				card.VisibleSide = Card.SideEnum.TopSide;
 
