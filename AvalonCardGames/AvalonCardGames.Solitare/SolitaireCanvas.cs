@@ -22,13 +22,6 @@ namespace AvalonCardGames.Solitaire.Shared
 		public const int DefaultWidth = 800;
 		public const int DefaultHeight = 600;
 
-		CardDeck MyDeck = new CardDeck
-		{
-		};
-
-		//List<CardStack> TempStacks;
-		BindingList<CardStack> GoalStacks;
-		BindingList<CardStack> PlayStacks;
 
 		public SolitaireCanvas()
 		{
@@ -39,12 +32,7 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			System.Console.WriteLine("--- solitare ---");
 
-			new TiledBackgroundImage(
-				(KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
-					64, 64,
-					14, 10
-			).AttachContainerTo(this);
-
+		
 			new TiledBackgroundImage(
 				(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
 					64, 64,
@@ -55,6 +43,13 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			new GameBorders(DefaultWidth, DefaultHeight, ShadowSize).AttachContainerTo(this);
 
+			new Image
+			{
+				Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
+				Width = 96,
+				Height = 96
+			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
+
 			var Content = new Canvas
 			{
 				Width = DefaultWidth,
@@ -63,7 +58,21 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			new SolitaireGame().AttachTo(Content);
 
-
+			new GameSocialLinks(this)
+			{
+				new GameSocialLinks.Button { 
+					Source = (KnownAssets.Path.Assets + "/plus_google.png").ToSource(),
+					Width = 62,
+					Height = 17,
+					Hyperlink = new Uri(Info.GoogleGadgetAddLink)
+				},
+				new GameSocialLinks.Button { 
+					Source = (KnownAssets.Path.Assets + "/su.png").ToSource(),
+					Width = 16,
+					Height = 16,
+					Hyperlink = new Uri( "http://www.stumbleupon.com/submit?url=" + Info.URL)
+				}
+			};
 
 		}
 	}

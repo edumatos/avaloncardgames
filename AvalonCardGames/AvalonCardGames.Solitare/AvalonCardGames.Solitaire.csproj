@@ -69,6 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Info.cs" />
+    <Compile Include="KnownAssets.cs" />
     <Compile Include="SolitaireGame.RankMapping.cs" />
     <Compile Include="SolitaireGame.cs" />
     <Compile Include="SolitaireFlash.cs" />
@@ -88,8 +90,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="web\assets\AvalonCardGames.Solitare.SocialLinks\" />
-    <Folder Include="web\assets\AvalonCardGames.Solitare\" />
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Solitaire\jsc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Solitaire\plus_google.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="web\assets\AvalonCardGames.Solitaire\su.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
