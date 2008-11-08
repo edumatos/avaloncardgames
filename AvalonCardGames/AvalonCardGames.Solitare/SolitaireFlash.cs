@@ -15,7 +15,7 @@ namespace AvalonCardGames.Solitaire.ActionScript
 	/// </summary>
 	[Script, ScriptApplicationEntryPoint(Width = TargetCanvas.DefaultWidth, Height = TargetCanvas.DefaultHeight)]
 	[SWF(width = TargetCanvas.DefaultWidth, height = TargetCanvas.DefaultHeight, backgroundColor = 0)]
-	public class SolitaireFlash : Sprite
+	public partial class SolitaireFlash : Sprite
 	{
 		public SolitaireFlash()
 		{
