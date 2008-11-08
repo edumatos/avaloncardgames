@@ -33,14 +33,15 @@ namespace AvalonCardGames.Solitaire.Shared
 		public const string Category1 = "lifestyle";
 		public const string Category2 = "funandgames";
 
-		public const string ScreenshotURL = "http://farm4.static.flickr.com/3016/3005649344_e6dc92eb80_o.png";
-		public const string ScreenshotSmallURL = "http://farm4.static.flickr.com/3016/3005649344_8c437f2d23_m.jpg";
+		public const string ScreenshotURL = "http://farm4.static.flickr.com/3221/3013109872_ae07cab6e2_o.png";
+		public const string ScreenshotSmallURL = "http://farm4.static.flickr.com/3221/3013109872_ae07cab6e2_m.png";
 
 
 		//public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/Mahjong_Multiplayer.xml";
 		//public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonSpiderSolitaire.xml";
-		public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonFreeCell.xml";
-
+		//public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonFreeCell.xml";
+		public const string GoogleGadget = "http://hosting.gmodules.com/ig/gadgets/file/112091410969506928037/AvalonSolitaire.xml";
+		
 
 		public const string GoogleGadgetAddLink = "http://fusion.google.com/ig/add?synd=open&source=ggyp&moduleurl=" + GoogleGadget;
 		public const string GoogleGadgetAddImage = "http://www.gmodules.com/ig/images/plus_google.gif";
