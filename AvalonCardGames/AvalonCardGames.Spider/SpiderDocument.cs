@@ -26,7 +26,10 @@ namespace AvalonCardGames.Spider.JavaScript
 			clip.style.SetSize(TargetCanvas.DefaultWidth, TargetCanvas.DefaultHeight);
 			clip.style.overflow = ScriptCoreLib.JavaScript.DOM.IStyle.OverflowEnum.hidden;
 
-			var c = new IHTMLElement(IHTMLElement.HTMLElementEnum.center, clip);
+            // todo: jsc bug: .ctor .params at rewrite
+			var c = new IHTMLElement(IHTMLElement.HTMLElementEnum.center,
+                new[] { clip }
+            );
 
 			if (e == null)
 				c.AttachToDocument();
