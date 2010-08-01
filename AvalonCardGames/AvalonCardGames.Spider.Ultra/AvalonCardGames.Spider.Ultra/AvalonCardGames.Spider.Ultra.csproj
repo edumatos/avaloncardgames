@@ -62,9 +62,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\util\jsc\bin\ScriptCoreLib.Avalon.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptCoreLib.Avalon.Cards">
-      <HintPath>C:\util\jsc\bin\ScriptCoreLib.Avalon.Cards.dll</HintPath>
-    </Reference>
     <Reference Include="ScriptCoreLib.Query, Version=1.0.2666.38864, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\util\jsc\bin\ScriptCoreLib.Query.dll</HintPath>
@@ -139,6 +136,12 @@
     <Content Include="Design\Levels\PreviewMedium.png" />
     <Content Include="Design\Preview.png" />
     <Content Include="Design\white-jsc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\jsc.svn\core\ScriptCoreLib.Avalon.Cards\ScriptCoreLib.Avalon.Cards.csproj">
+      <Project>{603F85FB-7455-4193-ACBE-7304811A19EE}</Project>
+      <Name>ScriptCoreLib.Avalon.Cards</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -19,6 +19,7 @@ using jsc.meta.Commands.Rewrite.RewriteToUltraApplication;
 using ScriptCoreLib.CSharp.Avalon.Extensions;
 using ScriptCoreLib.ActionScript.flash.display;
 using ScriptCoreLib.ActionScript.Extensions;
+using ScriptCoreLib.ActionScript;
 
 namespace AvalonCardGames.Spider.Ultra
 {
@@ -73,7 +74,22 @@ namespace AvalonCardGames.Spider.Ultra
             this.InvokeWhenStageIsReady(
                 delegate
                 {
-                    new ApplicationCanvas().AttachToContainer(this);
+                    var c = new ApplicationCanvas();
+
+                    Func<string, Class> f =
+    e => KnownEmbeddedResources.Default[ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.Sounds + "/" + e + ".mp3"];
+
+                    var deal = f("deal");
+                    var click = f("click");
+                    var drag = f("drag");
+                    var win = f("win");
+
+                    c.Content.Sounds.deal = () => deal.ToSoundAsset().play();
+                    c.Content.Sounds.click = () => click.ToSoundAsset().play();
+                    c.Content.Sounds.drag = () => drag.ToSoundAsset().play();
+                    c.Content.Sounds.win = () => win.ToSoundAsset().play();
+
+                    c.AttachToContainer(this);
                 }
             );
         }

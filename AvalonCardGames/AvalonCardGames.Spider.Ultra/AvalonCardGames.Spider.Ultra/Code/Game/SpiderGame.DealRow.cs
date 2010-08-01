@@ -32,6 +32,9 @@ namespace AvalonCardGames.Spider.Shared
 
 			Console.WriteLine(new { Remove = DealingStack }.ToString());
 
+            // ?
+            DealingStack.Overlay.Orphanize();
+
 			DealStacks.Remove(DealingStack);
 
 

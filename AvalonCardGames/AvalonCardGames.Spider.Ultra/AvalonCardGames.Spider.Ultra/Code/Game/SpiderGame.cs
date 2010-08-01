@@ -67,6 +67,8 @@ namespace AvalonCardGames.Spider.Shared
 			this.MyDeck.AttachContainerTo(this);
 			this.MyDeck.GetRank = e => (int)RankMapping[e];
 			this.MyDeck.CardCustomBackground = global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/spider.png";
+            
+            //this.MyDeck.Overlay.Opacity = 0.6;
 
 			MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
 				(DefaultWidth - StatusControl.Width) / 2,
@@ -266,7 +268,7 @@ namespace AvalonCardGames.Spider.Shared
 								}
 								else
 								{
-									System.Console.WriteLine("whoops wrong stack click ");
+                                    System.Console.WriteLine("whoops wrong stack click - " + args.NewIndex);
 
 								}
 							};
@@ -285,13 +287,13 @@ namespace AvalonCardGames.Spider.Shared
 
 			while (MyDeck.UnusedCards.Count > 0)
 			{
-				var s = new CardStack { MyDeck.FetchCards(10) };
+                var s = new CardStack { MyDeck.FetchCards(10) };
+                //s.Overlay.Opacity = 1;
+                s.Name = "DealStack";
 
-				s.Name = "DealStack";
-
-				DealStacks.Add(
-					s.MoveTo(Convert.ToInt32(dealpoint.X), Convert.ToInt32(dealpoint.Y))
-				);
+                DealStacks.Add(
+                    s.MoveTo(Convert.ToInt32(dealpoint.X), Convert.ToInt32(dealpoint.Y))
+                );
 
 				dealpoint.X -= 10;
 			}

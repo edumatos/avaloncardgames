@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Web Developer Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Spider.Ultra", "AvalonCardGames.Spider.Ultra\AvalonCardGames.Spider.Ultra.csproj", "{5D4A9462-8F8C-4ADD-9365-BC921A26C2B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptCoreLib.Avalon.Cards", "..\..\..\jsc.svn\core\ScriptCoreLib.Avalon.Cards\ScriptCoreLib.Avalon.Cards.csproj", "{603F85FB-7455-4193-ACBE-7304811A19EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,6 +18,12 @@ Global
 		{5D4A9462-8F8C-4ADD-9365-BC921A26C2B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D4A9462-8F8C-4ADD-9365-BC921A26C2B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D4A9462-8F8C-4ADD-9365-BC921A26C2B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Assets|Any CPU.ActiveCfg = Release|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Assets|Any CPU.Build.0 = Release|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603F85FB-7455-4193-ACBE-7304811A19EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
