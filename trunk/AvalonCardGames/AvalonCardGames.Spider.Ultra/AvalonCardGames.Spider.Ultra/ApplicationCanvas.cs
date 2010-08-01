@@ -21,6 +21,8 @@ namespace AvalonCardGames.Spider.Ultra
         public const int DefaultWidth = SpiderCanvas.DefaultWidth;
         public const int DefaultHeight = SpiderCanvas.DefaultHeight;
 
+        public SpiderCanvas Content;
+
         public ApplicationCanvas()
         {
             Width = DefaultWidth;
@@ -28,7 +30,8 @@ namespace AvalonCardGames.Spider.Ultra
 
             this.ClipToBounds = true;
 
-            new SpiderCanvas().AttachTo(this);
+            this.Content = new SpiderCanvas();
+            this.Content.AttachTo(this);
 
 #if DEBUG
             new Avalon.Images.white_jsc().AttachTo(this).MoveTo(
