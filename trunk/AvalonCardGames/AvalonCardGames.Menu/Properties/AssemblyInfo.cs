@@ -38,8 +38,4 @@ using ScriptCoreLib;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly:
-	Script,
-	ScriptTypeFilter(ScriptType.ActionScript, typeof(AvalonCardGames.Menu.Shared.GameMenu)),
-	ScriptTypeFilter(ScriptType.JavaScript, typeof(AvalonCardGames.Menu.Shared.GameMenu)),
-]
+[assembly: Obfuscation(Feature = @"merge")]

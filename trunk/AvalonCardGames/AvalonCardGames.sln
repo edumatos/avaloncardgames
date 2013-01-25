@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Web
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Labs", "AvalonCardGames.Labs\AvalonCardGames.Labs.csproj", "{26898714-043F-4B3B-9175-E15883E8A5BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Solitaire", "AvalonCardGames.Solitare\AvalonCardGames.Solitaire.csproj", "{46B01241-7DD5-489C-A20A-22BA34F50437}"
@@ -10,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.FreeCell", "AvalonCardGames.FreeCell\AvalonCardGames.FreeCell.csproj", "{421A7BBC-D6A3-41AB-97EA-6A7604D3E7D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.Menu", "AvalonCardGames.Menu\AvalonCardGames.Menu.csproj", "{04696836-64F2-4132-9925-907B204B41BA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonCardGames.FreeCell.XBAP", "AvalonCardGames.FreeCell.XBAP\AvalonCardGames.FreeCell.XBAP.csproj", "{C2F2B70A-382E-4227-B555-DC051C244396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{04696836-64F2-4132-9925-907B204B41BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04696836-64F2-4132-9925-907B204B41BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04696836-64F2-4132-9925-907B204B41BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2F2B70A-382E-4227-B555-DC051C244396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2F2B70A-382E-4227-B555-DC051C244396}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2F2B70A-382E-4227-B555-DC051C244396}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2F2B70A-382E-4227-B555-DC051C244396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

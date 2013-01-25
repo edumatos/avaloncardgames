@@ -14,207 +14,209 @@ using System.ComponentModel;
 
 namespace AvalonCardGames.Menu.Shared
 {
-	[Script]
-	public class GameMenu : ISupportsContainer, IEnumerable<GameMenu.Option>
-	{
-		public Canvas Container { get; set; }
+    [Script]
+    public class GameMenuOption
+    {
+        public ImageSource Source;
+
+        public string Text;
+
+        public Action Click;
+
+        public Uri Hyperlink;
+
+        public double MarginBefore;
+        public double MarginAfter;
+
+        internal SimpleCarouselControl.EntryInfo CarouselEntry;
 
 
-		[Script]
-		public class Option
-		{
-			public ImageSource Source;
+    }
 
-			public string Text;
-
-			public Action Click;
-
-			public Uri Hyperlink;
-
-			public double MarginBefore;
-			public double MarginAfter;
-
-			internal SimpleCarouselControl.EntryInfo CarouselEntry;
-
-
-		}
-
-		public string IdleText = "Select a difficulty for a new game!";
-
-		internal readonly BindingList<Option> Options = new BindingList<Option>();
-
-		public void Add(Option e)
-		{
-			Options.Add(e);
-		}
-
-		public SimpleCarouselControl Carousel { get; set; }
-
-		public GameMenu(int Width, int Height, int ShadowHeight)
-		{
-			var ContentHeight = Height * 2 / 3;
-
-			this.Container = new Canvas
-			{
-				Width = Width,
-				Height = ContentHeight + ShadowHeight
-			};
-
-			var ShadowContainer = new Canvas
-			{
-				Width = Width,
-				Height = ContentHeight + ShadowHeight,
-				Opacity = 0.5
-			}.AttachTo(this.Container);
-
-			new Rectangle
-		   {
-			   Fill = Brushes.Black,
-			   Width = Width,
-			   Height = ContentHeight,
-		   }.MoveTo(0, 0).AttachTo(ShadowContainer);
+    [Script]
+    public class GameMenu : ISupportsContainer, IEnumerable<GameMenuOption>
+    {
+        public Canvas Container { get; set; }
 
 
 
-			Colors.Black.ToTransparentGradient(ShadowHeight).Select(
-				(c, i) =>
-				{
-					return new Rectangle
-					{
-						Fill = new SolidColorBrush(c),
-						Width = Width,
-						Height = 1,
-						Opacity = c.A / 255.0
-					}.MoveTo(0, ContentHeight + i).AttachTo(ShadowContainer);
-				}
-			).ToArray();
+
+        public string IdleText = "Select a difficulty for a new game!";
+
+        internal readonly BindingList<GameMenuOption> Options = new BindingList<GameMenuOption>();
+
+        public void Add(GameMenuOption e)
+        {
+            Options.Add(e);
+        }
+
+        public SimpleCarouselControl Carousel { get; set; }
+
+        public GameMenu(int Width, int Height, int ShadowHeight)
+        {
+            var ContentHeight = Height * 2 / 3;
+
+            this.Container = new Canvas
+            {
+                Width = Width,
+                Height = ContentHeight + ShadowHeight
+            };
+
+            var ShadowContainer = new Canvas
+            {
+                Width = Width,
+                Height = ContentHeight + ShadowHeight,
+                Opacity = 0.5
+            }.AttachTo(this.Container);
+
+            new Rectangle
+           {
+               Fill = Brushes.Black,
+               Width = Width,
+               Height = ContentHeight,
+           }.MoveTo(0, 0).AttachTo(ShadowContainer);
 
 
 
-			this.Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
-
-			
-
-			Carousel.Caption.FontSize = 36;
-			Carousel.Caption.Height = 60;
-			Carousel.Caption.Text = IdleText;
-
-			Action<int, int> AnimatedShadowOpacity = NumericEmitter.Of(
-				(x, y) => ShadowContainer.Opacity = x * 0.01
-			);
-
-			var ShadowOpacity = 50;
-
-			AnimatedShadowOpacity(ShadowOpacity, 0);
-
-
-			Carousel.Hover +=
-				delegate
-				{
-					ShadowOpacity = 70;
-					AnimatedShadowOpacity(ShadowOpacity, 0);
-				};
-
-			Carousel.Idle +=
-				delegate
-				{
-					Carousel.Caption.Text = IdleText;
-					ShadowOpacity = 50;
-					AnimatedShadowOpacity(ShadowOpacity, 0);
-				};
-
-			this.Options.ForEachNewItem(
-				e =>
-				{
-					double p = 0;
-
-					this.Where(k => k != e).LastOrDefault().Apply(k => p = k.CarouselEntry.Position + k.MarginAfter);
-
-					e.CarouselEntry = new SimpleCarouselControl.EntryInfo
-					{
-						Source = e.Source,
-						Text = e.Text,
-						Position = p + e.MarginBefore,
-						Click =
-							delegate
-							{
-								if (e.Click != null)
-									e.Click();
-
-								if (e.Hyperlink != null)
-									e.Hyperlink.NavigateTo();
-							}
-					};
-
-					Carousel.AddEntry(e.CarouselEntry);
-				}
-			);
+            Colors.Black.ToTransparentGradient(ShadowHeight).Select(
+                (c, i) =>
+                {
+                    return new Rectangle
+                    {
+                        Fill = new SolidColorBrush(c),
+                        Width = Width,
+                        Height = 1,
+                        Opacity = c.A / 255.0
+                    }.MoveTo(0, ContentHeight + i).AttachTo(ShadowContainer);
+                }
+            ).ToArray();
 
 
 
-			Carousel.AttachContainerTo(this);
-
-			Carousel.Overlay.AttachTo(this);
+            this.Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
 
 
 
-			Action<int, int> AnimatedTop = NumericEmitter.Of(
-				(x, y) => this.Container.MoveTo(0, y)
-			);
+            Carousel.Caption.FontSize = 36;
+            Carousel.Caption.Height = 60;
+            Carousel.Caption.Text = IdleText;
 
-			this.MoveContainerTo(0, -ContentHeight);
-			AnimatedTop(0, -ContentHeight);
+            Action<int, int> AnimatedShadowOpacity = NumericEmitter.Of(
+                (x, y) => ShadowContainer.Opacity = x * 0.01
+            );
 
-			this.Show = delegate
-			{
-				Carousel.Show();
-				AnimatedTop(0, 0);
+            var ShadowOpacity = 50;
 
-				AnimatedShadowOpacity(ShadowOpacity, 0);
-			};
-
-			this.Hide = delegate
-			{
-				Carousel.Hide();
-				AnimatedTop(0, -ContentHeight);
-				AnimatedShadowOpacity(0, 0);
-			};
-
-			var Delayed = this.Container.ToDelayedMouseEvents();
-
-			Delayed.ValidateMouseEnter = () => ValidateShow();
-			Delayed.ValidateMouseLeave = () => ValidateHide();
-			Delayed.MouseEnter += Show;
-			Delayed.MouseLeave += Hide;
+            AnimatedShadowOpacity(ShadowOpacity, 0);
 
 
+            Carousel.Hover +=
+                delegate
+                {
+                    ShadowOpacity = 70;
+                    AnimatedShadowOpacity(ShadowOpacity, 0);
+                };
 
-			ShadowContainer.Opacity = 0;
+            Carousel.Idle +=
+                delegate
+                {
+                    Carousel.Caption.Text = IdleText;
+                    ShadowOpacity = 50;
+                    AnimatedShadowOpacity(ShadowOpacity, 0);
+                };
 
-		}
+            this.Options.ForEachNewItem(
+                e =>
+                {
+                    double p = 0;
 
-		public readonly Action Show;
-		public readonly Action Hide;
+                    this.Where(k => k != e).LastOrDefault().Apply(k => p = k.CarouselEntry.Position + k.MarginAfter);
 
-		public Func<bool> ValidateHide = () => true;
-		public Func<bool> ValidateShow = () => true;
+                    e.CarouselEntry = new SimpleCarouselControl.EntryInfo
+                    {
+                        Source = e.Source,
+                        Text = e.Text,
+                        Position = p + e.MarginBefore,
+                        Click =
+                            delegate
+                            {
+                                if (e.Click != null)
+                                    e.Click();
 
-		#region IEnumerable<Option> Members
+                                if (e.Hyperlink != null)
+                                    e.Hyperlink.NavigateTo();
+                            }
+                    };
 
-		public IEnumerator<GameMenu.Option> GetEnumerator()
-		{
-			return this.Options.GetEnumerator();
-		}
+                    Carousel.AddEntry(e.CarouselEntry);
+                }
+            );
 
-		#endregion
 
-		#region IEnumerable Members
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return this.Options.GetEnumerator();
-		}
+            Carousel.AttachContainerTo(this);
 
-		#endregion
-	}
+            Carousel.Overlay.AttachTo(this);
+
+
+
+            Action<int, int> AnimatedTop = NumericEmitter.Of(
+                (x, y) => this.Container.MoveTo(0, y)
+            );
+
+            this.MoveContainerTo(0, -ContentHeight);
+            AnimatedTop(0, -ContentHeight);
+
+            this.Show = delegate
+            {
+                Carousel.Show();
+                AnimatedTop(0, 0);
+
+                AnimatedShadowOpacity(ShadowOpacity, 0);
+            };
+
+            this.Hide = delegate
+            {
+                Carousel.Hide();
+                AnimatedTop(0, -ContentHeight);
+                AnimatedShadowOpacity(0, 0);
+            };
+
+            var Delayed = this.Container.ToDelayedMouseEvents();
+
+            Delayed.ValidateMouseEnter = () => ValidateShow();
+            Delayed.ValidateMouseLeave = () => ValidateHide();
+            Delayed.MouseEnter += Show;
+            Delayed.MouseLeave += Hide;
+
+
+
+            ShadowContainer.Opacity = 0;
+
+        }
+
+        public readonly Action Show;
+        public readonly Action Hide;
+
+        public Func<bool> ValidateHide = () => true;
+        public Func<bool> ValidateShow = () => true;
+
+        #region IEnumerable<Option> Members
+
+        public IEnumerator<GameMenuOption> GetEnumerator()
+        {
+            return this.Options.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.Options.GetEnumerator();
+        }
+
+        #endregion
+    }
 }

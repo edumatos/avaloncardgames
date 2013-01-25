@@ -15,8 +15,8 @@ namespace AvalonCardGames.Menu
 	public interface IAssemblyReferenceToken :
 		ScriptCoreLib.Shared.Query.IAssemblyReferenceToken,
 		ScriptCoreLib.Shared.IAssemblyReferenceToken,
-		ScriptCoreLib.Shared.Avalon.IAssemblyReferenceToken,
-		ScriptCoreLib.Shared.Avalon.Cards.IAssemblyReferenceToken
+		ScriptCoreLib.Shared.Avalon.IAssemblyReferenceToken
+        //ScriptCoreLib.Shared.Avalon.Cards.IAssemblyReferenceToken
 	{
 	}
 }

@@ -9,6 +9,7 @@ using AvalonCardGames.Menu.Shared;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using AvalonCardGames.Spider.Shared;
 using AvalonCardGames.Spider.Ultra.Avalon.Images;
+using Abstractatech.Avalon.Cards.Avalon.Images;
 
 namespace AvalonCardGames.Spider.Ultra.Code
 {
@@ -60,11 +61,12 @@ namespace AvalonCardGames.Spider.Ultra.Code
 			this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
 
 
-			new TiledBackgroundImage(
-				(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
-					64, 64,
-					14, 10
-			).AttachContainerTo(this);
+            new TiledBackgroundImage(
+                new felt().Source
+                ,
+                    64, 64,
+                    14, 10
+            ).AttachContainerTo(this);
 
 			var ShadowHeight = 40;
 
@@ -120,9 +122,9 @@ namespace AvalonCardGames.Spider.Ultra.Code
             //            MarginAfter = Math.PI / 4
             //        };
 
-			Func<string, Image, Func<SpiderGame>, GameMenu.Option> Level =
+			Func<string, Image, Func<SpiderGame>, GameMenuOption> Level =
 				(Text, Image, ctor) =>
-					new GameMenu.Option
+					new GameMenuOption
 					{
 						Text = Text,
 						Source =  Image.Source,
