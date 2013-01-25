@@ -12,16 +12,16 @@ using System.Xml.Linq;
 
 namespace AvalonCardGames.AIRSolitaire
 {
-    public class ApplicationCanvas : Canvas
+    public class ApplicationCanvas : AvalonCardGames.Solitaire.Shared.SolitaireCanvas
     {
-        public readonly Rectangle r = new Rectangle();
+        //public readonly Rectangle r = new Rectangle();
 
         public ApplicationCanvas()
         {
-            r.Fill = Brushes.Red;
-            r.AttachTo(this);
-            r.MoveTo(8, 8);
-            this.SizeChanged += (s, e) => r.SizeTo(this.Width - 16.0, this.Height - 16.0);
+            //r.Fill = Brushes.Red;
+            //r.AttachTo(this);
+            //r.MoveTo(8, 8);
+            //this.SizeChanged += (s, e) => r.SizeTo(this.Width - 16.0, this.Height - 16.0);
         }
 
     }
