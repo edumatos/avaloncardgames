@@ -19,6 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{C827
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptCoreLib.Avalon.Carousel", "..\..\..\jsc.svn\core\ScriptCoreLib.Avalon.Carousel\ScriptCoreLib.Avalon.Carousel\ScriptCoreLib.Avalon.Carousel.csproj", "{0B5B4B1A-B82F-464A-904E-11FEFAEFB18F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2BB6A585-E615-4A16-9E56-301A5B9A0881}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Assets|Any CPU = Assets|Any CPU
@@ -60,6 +67,7 @@ Global
 		{46B01241-7DD5-489C-A20A-22BA34F50437}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Assets|Any CPU.ActiveCfg = Release|Any CPU
 		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Assets|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Assets|Mixed Platforms.Build.0 = Release|Any CPU
 		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Assets|x86.ActiveCfg = Release|Any CPU
 		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A3E3ED34-4C8F-4733-832F-59A0506F68D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
