@@ -75,9 +75,9 @@ namespace AvalonCardGames.Solitaire.Shared
 
 
 			// redefine the ctor to fit our context
-			Func<string, string, string, GameMenu.Option> Option =
+			Func<string, string, string, GameMenuOption> Option =
 				(Text, Image, href) =>
-					new GameMenu.Option
+					new GameMenuOption
 					{
 						Text = "Play " + Text + "!",
 						Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
@@ -92,7 +92,7 @@ namespace AvalonCardGames.Solitaire.Shared
 
 			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
 			{
-				new GameMenu.Option
+				new GameMenuOption
 				{
 					Text = "Solitaire - medium difficulty",
 					Source = (KnownAssets.Path.Assets + "/Preview.png").ToSource(),

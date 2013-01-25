@@ -165,10 +165,12 @@ namespace AvalonCardGames.FreeCell.Shared
                 k =>
                 {
 
-                    k.CardMargin = new Vector();
+                    k.CardMargin.Y = 0;
+
                     k.Cards.ForEachNewItem(
                         card =>
                         {
+                            Console.WriteLine("GoalStacks ForEachNewItem " + new { k.CardMargin.Y });
 
                             if (card.Info.Rank == CardInfo.RankEnum.RankKing)
                             {

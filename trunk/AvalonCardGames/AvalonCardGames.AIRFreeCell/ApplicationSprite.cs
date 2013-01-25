@@ -9,6 +9,8 @@ using ScriptCoreLib.Shared.Avalon.Cards;
 using System;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.IO;
+using System.Text;
 
 namespace AvalonCardGames.AIRFreeCell
 {
@@ -142,10 +144,116 @@ namespace AvalonCardGames.AIRFreeCell
                     }
                 }
             );
+
+
+            #region AtInitializeConsoleFormWriter
+
+            var w = new __OutWriter();
+            var o = Console.Out;
+            var __reentry = false;
+
+            var __buffer = new StringBuilder();
+
+            w.AtWrite =
+                x =>
+                {
+                    __buffer.Append(x);
+                };
+
+            w.AtWriteLine =
+                x =>
+                {
+                    __buffer.AppendLine(x);
+                };
+
+            Console.SetOut(w);
+
+            this.AtInitializeConsoleFormWriter = (
+                Action<string> Console_Write,
+                Action<string> Console_WriteLine
+            ) =>
+            {
+
+                try
+                {
+
+
+                    w.AtWrite =
+                        x =>
+                        {
+                            o.Write(x);
+
+                            if (!__reentry)
+                            {
+                                __reentry = true;
+                                Console_Write(x);
+                                __reentry = false;
+                            }
+                        };
+
+                    w.AtWriteLine =
+                        x =>
+                        {
+                            o.WriteLine(x);
+
+                            if (!__reentry)
+                            {
+                                __reentry = true;
+                                Console_WriteLine(x);
+                                __reentry = false;
+                            }
+                        };
+
+                    Console.WriteLine("flash Console.WriteLine should now appear in JavaScript form!");
+                    Console.WriteLine(__buffer.ToString());
+                }
+                catch
+                {
+
+                }
+            };
+            #endregion
+
         }
 
         //public string _mochiads_game_id = "test";
         public string _mochiads_game_id = "47e72426ba7f4f3f";
+
+
+
+        Action<Action<string>, Action<string>> AtInitializeConsoleFormWriter;
+
+
+        #region InitializeConsoleFormWriter
+        class __OutWriter : TextWriter
+        {
+            public Action<string> AtWrite;
+            public Action<string> AtWriteLine;
+
+            public override void Write(string value)
+            {
+                AtWrite(value);
+            }
+
+            public override void WriteLine(string value)
+            {
+                AtWriteLine(value);
+            }
+
+            public override Encoding Encoding
+            {
+                get { return Encoding.UTF8; }
+            }
+        }
+
+        public void InitializeConsoleFormWriter(
+            Action<string> Console_Write,
+            Action<string> Console_WriteLine
+        )
+        {
+            AtInitializeConsoleFormWriter(Console_Write, Console_WriteLine);
+        }
+        #endregion
     }
 
     public sealed class MochiAdOptions
