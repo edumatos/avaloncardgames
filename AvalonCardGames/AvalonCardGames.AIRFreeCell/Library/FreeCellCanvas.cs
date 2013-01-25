@@ -44,12 +44,15 @@ namespace AvalonCardGames.FreeCell.Shared
                 new felt().Source,
                 //(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
                     64, 64,
-                    14, 10
+
+                    // repeaters
+                    x: 32,
+                    y: 24
             ).AttachContainerTo(this);
 
             var ShadowSize = 40;
 
-            new GameBorders(DefaultWidth, DefaultHeight, ShadowSize).AttachContainerTo(this);
+            new GameBorders(DefaultWidth, DefaultHeight, ShadowSize, this).AttachContainerTo(this);
 
             var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
             //new Image
@@ -59,7 +62,13 @@ namespace AvalonCardGames.FreeCell.Shared
             //    Height = 96
             //}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
 
-            this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
+            this.History = new AeroNavigationBar().MoveContainerTo(
+                12,
+                8
+            );
+
+            // make it bigger for android!
+            //this.History.Container.RenderTransform = new ScaleTransform(2, 2);
 
             var Content = new Canvas
             {
@@ -69,6 +78,23 @@ namespace AvalonCardGames.FreeCell.Shared
 
             var Game = default(FreeCellGame);
             var GameFocusBoost = false;
+
+            Action AtSizeChanged = delegate
+            {
+                if (Game != null)
+                    Game.MoveTo(
+                        (this.Width - DefaultWidth) / 2,
+                        (this.Height - DefaultHeight)
+                    );
+            };
+
+            this.SizeChanged +=
+                delegate
+                {
+                    AtSizeChanged();
+
+
+                };
 
             Action CreateGame =
                 delegate
@@ -83,6 +109,8 @@ namespace AvalonCardGames.FreeCell.Shared
 
                     Game.MyDeck.Sounds = this.Sounds;
                     Game.AttachTo(Content);
+
+                    AtSizeChanged();
 
                     var CurrentGame = Game;
 
@@ -114,7 +142,6 @@ namespace AvalonCardGames.FreeCell.Shared
 
 
 
-
             //new GameSocialLinks(this)
             //{
             //    new GameSocialLinks.Button { 
@@ -142,7 +169,7 @@ namespace AvalonCardGames.FreeCell.Shared
             //            MarginAfter = Math.PI / 4
             //        };
 
-            this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
+            this.Menu = new GameMenu((int)this.Width, DefaultHeight, ShadowSize, this)
 			{
 				new GameMenuOption
 				{
@@ -154,11 +181,11 @@ namespace AvalonCardGames.FreeCell.Shared
 						{
 							GameFocusBoost = true;
 
-							this.Menu.Hide();
 
 							CreateGame();
+                            this.Menu.Hide();
 
-							500.AtDelay(() => GameFocusBoost = false);
+							1000.AtDelay(() => GameFocusBoost = false);
 						}
 				},
                 //Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
@@ -173,7 +200,19 @@ namespace AvalonCardGames.FreeCell.Shared
 
             this.Menu.AttachContainerTo(this);
 
+            // QA: is this working correctly for flash?
+#if DEBUG
+            var HistoryNoZone = new Rectangle();
+
+            HistoryNoZone.Fill = Brushes.Yellow;
+
+            HistoryNoZone.Width = 96;
+            HistoryNoZone.Height = 48;
+            HistoryNoZone.Opacity = 0;
+            HistoryNoZone.AttachTo(this);
+
             this.History.AttachContainerTo(this);
+#endif
 
             this.Menu.Show();
         }

@@ -7,6 +7,9 @@ namespace AvalonCardGames.AIRFreeCell
 {
     public sealed class ApplicationSprite : Sprite
     {
+        public const int DefaultWidth = FreeCell.Shared.FreeCellGame.DefaultWidth;
+        public const int DefaultHeight = FreeCell.Shared.FreeCellGame.DefaultHeight;
+
         public readonly ApplicationCanvas content = new ApplicationCanvas();
 
         public ApplicationSprite()

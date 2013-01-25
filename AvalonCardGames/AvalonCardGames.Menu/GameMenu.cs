@@ -52,7 +52,7 @@ namespace AvalonCardGames.Menu.Shared
 
         public SimpleCarouselControl Carousel { get; set; }
 
-        public GameMenu(int Width, int Height, int ShadowHeight)
+        public GameMenu(int Width, int Height, int ShadowHeight, Canvas stage = null)
         {
             var ContentHeight = Height * 2 / 3;
 
@@ -69,7 +69,7 @@ namespace AvalonCardGames.Menu.Shared
                 Opacity = 0.5
             }.AttachTo(this.Container);
 
-            new Rectangle
+            var ShadowContainerFill = new Rectangle
            {
                Fill = Brushes.Black,
                Width = Width,
@@ -78,7 +78,7 @@ namespace AvalonCardGames.Menu.Shared
 
 
 
-            Colors.Black.ToTransparentGradient(ShadowHeight).Select(
+            var shadowbottom = Colors.Black.ToTransparentGradient(ShadowHeight).Select(
                 (c, i) =>
                 {
                     return new Rectangle
@@ -91,7 +91,22 @@ namespace AvalonCardGames.Menu.Shared
                 }
             ).ToArray();
 
+            if (stage != null)
+            {
+                stage.SizeChanged +=
+                    delegate
+                    {
+                        ShadowContainerFill.Width = stage.Width;
 
+                        shadowbottom.ForEach(
+                            (Rectangle c, int i) =>
+                            {
+                                c.Width = stage.Width;
+
+                            }
+                        );
+                    };
+            }
 
             this.Carousel = new SimpleCarouselControl(Width, ContentHeight).MoveContainerTo(0, 0);
 
