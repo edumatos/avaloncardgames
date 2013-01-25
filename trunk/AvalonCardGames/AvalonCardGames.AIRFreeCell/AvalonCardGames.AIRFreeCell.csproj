@@ -146,7 +146,10 @@
     <Compile Include="Program.cs">
       <DependentUpon>ApplicationCanvas.cs</DependentUpon>
     </Compile>
-    <Content Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell.xml" />
+    <Content Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Textures\jsc.png" />
     <Content Include="Textures\kingbitm.png" />
     <Content Include="Textures\kingleft.png" />
@@ -158,11 +161,15 @@
     <Content Include="Textures\x100.png" />
     <Content Include="Textures\x46.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AIR\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell-install.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell-build.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AvalonCardGames.Menu\AvalonCardGames.Menu.csproj">
