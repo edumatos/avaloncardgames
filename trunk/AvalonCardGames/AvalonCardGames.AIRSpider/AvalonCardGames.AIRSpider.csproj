@@ -5,16 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{194B6AE5-B986-4513-8803-9A27E07EEACF}</ProjectGuid>
+    <ProjectGuid>{CCB9E253-D52F-466A-9B03-CDBEB107C1C1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AvalonCardGames.AIRFreeCell</RootNamespace>
-    <AssemblyName>AvalonCardGames.AIRFreeCell</AssemblyName>
+    <RootNamespace>AvalonCardGames.AIRSpider</RootNamespace>
+    <AssemblyName>AvalonCardGames.AIRSpider</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>AvalonCardGames.AIRFreeCell.Program</StartupObject>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <StartupObject>AvalonCardGames.AIRSpider.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,12 +36,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Abstractatech.Avalon.Cards">
-      <HintPath>..\packages\Abstractatech.Avalon.Cards.1.0.0.0\lib\Abstractatech.Avalon.Cards.dll</HintPath>
-    </Reference>
-    <Reference Include="Abstractatech.ConsoleFormPackage">
-      <HintPath>..\packages\Abstractatech.ConsoleFormPackage.1.0.0.0\lib\Abstractatech.ConsoleFormPackage.dll</HintPath>
-    </Reference>
     <Reference Include="jsc.meta">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\util\jsc\bin\jsc.meta.exe</HintPath>
@@ -51,9 +43,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="FSharp.Core">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="mochi">
-      <HintPath>..\packages\mochi.1.0.0.0\lib\mochi.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -68,12 +57,6 @@
     <Reference Include="ScriptCoreLib.Avalon">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\util\jsc\bin\ScriptCoreLib.Avalon.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptCoreLib.Avalon.Carousel">
-      <HintPath>C:\util\jsc\bin\ScriptCoreLib.Avalon.Carousel.dll</HintPath>
-    </Reference>
-    <Reference Include="ScriptCoreLib.Avalon.TiledImageButton">
-      <HintPath>C:\util\jsc\bin\ScriptCoreLib.Avalon.TiledImageButton.dll</HintPath>
     </Reference>
     <Reference Include="ScriptCoreLib.Query">
       <SpecificVersion>False</SpecificVersion>
@@ -130,16 +113,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="UIAutomationTypes" />
-    <Reference Include="AvalonCardGames.AIRFreeCell.AssetsLibrary">
-      <HintPath>bin\staging.AssetsLibrary\AvalonCardGames.AIRFreeCell.AssetsLibrary.dll</HintPath>
+    <Reference Include="AvalonCardGames.AIRSpider.AssetsLibrary">
+      <HintPath>bin\staging.AssetsLibrary\AvalonCardGames.AIRSpider.AssetsLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Design\App.css" />
     <Content Include="Design\App.htm" />
-    <Compile Include="Library\FreeCellCanvas.cs" />
-    <Compile Include="Library\FreeCellGame.cs" />
-    <Compile Include="Library\FreeCellGame.RankMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationCanvas.cs" />
     <Compile Include="ApplicationSprite.cs">
@@ -154,47 +134,12 @@
     <Compile Include="Program.cs">
       <DependentUpon>ApplicationCanvas.cs</DependentUpon>
     </Compile>
-    <Content Include="Promotion\device-2013-01-25-222951.png" />
-    <Content Include="Promotion\device-2013-01-25-223148.png" />
-    <Content Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Textures\jsc.png" />
-    <Content Include="Textures\kingbitm.png" />
-    <Content Include="Textures\kingleft.png" />
-    <Content Include="Textures\kingsmil.png" />
-    <Content Include="Textures\plus_google.png" />
-    <Content Include="Textures\Preview.png" />
-    <Content Include="Textures\Screenshot.png" />
-    <Content Include="Textures\su.png" />
-    <Content Include="Textures\x100.png" />
-    <Content Include="Textures\x46.gif" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell-install.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell-build.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell-test.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AvalonCardGames.Menu\AvalonCardGames.Menu.csproj">
-      <Project>{04696836-64f2-4132-9925-907b204b41ba}</Project>
-      <Name>AvalonCardGames.Menu</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
 if $(ConfigurationName)==Release (
-start /MIN /WAIT cmd /C c:\util\jsc\bin\jsc.meta.exe RewriteToJavaScriptDocument /assembly:"$(TargetFileName)" /AttachDebugger:false  /DisableWebServiceJava:true /DisableWebServicePHP:true /DisableWebServiceAndroid:true
-
-
+rem start /MIN /WAIT cmd /C c:\util\jsc\bin\jsc.meta.exe RewriteToJavaScriptDocument /assembly:"$(TargetFileName)" /AttachDebugger:false  /DisableWebServiceJava:true /DisableWebServicePHP:true /DisableWebServiceAndroid:true
 )</PostBuildEvent>
     <PreBuildEvent>
 
@@ -202,5 +147,4 @@ start /MIN /WAIT C:\util\jsc\bin\jsc.meta.exe ReferenceAssetsLibrary /ProjectFil
 
             </PreBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

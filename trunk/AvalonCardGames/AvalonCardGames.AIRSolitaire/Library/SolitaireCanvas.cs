@@ -21,6 +21,8 @@ namespace AvalonCardGames.Solitaire.Shared
     [Script]
     public class SolitaireCanvas : Canvas
     {
+        Preview128 ref1;
+
         public const int DefaultWidth = 800;
         public const int DefaultHeight = 600;
 
@@ -119,7 +121,7 @@ namespace AvalonCardGames.Solitaire.Shared
 				new GameMenuOption
 				{
 					Text = "Solitaire - medium difficulty",
-					Source = new Preview().Source,
+					Source = new Preview120x90().Source,
 					MarginAfter = 3 * Math.PI / 6,
 					Click =
 						delegate
