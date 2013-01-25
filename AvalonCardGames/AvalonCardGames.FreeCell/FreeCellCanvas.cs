@@ -17,101 +17,101 @@ using ScriptCoreLib.Shared.Lambda;
 
 namespace AvalonCardGames.FreeCell.Shared
 {
-	[Script]
-	public partial class FreeCellCanvas : Canvas
-	{
-		public const int DefaultWidth = 800;
-		public const int DefaultHeight = 600;
+    [Script]
+    public partial class FreeCellCanvas : Canvas
+    {
+        public const int DefaultWidth = 800;
+        public const int DefaultHeight = 600;
 
-		public AeroNavigationBar History { get; set; }
+        public AeroNavigationBar History { get; set; }
 
-		public readonly Sounds Sounds = new Sounds();
+        public readonly Sounds Sounds = new Sounds();
 
-		public GameMenu Menu { get; set; }
+        public GameMenu Menu { get; set; }
 
-		public FreeCellCanvas()
-		{
-			Width = DefaultWidth;
-			Height = DefaultHeight;
+        public FreeCellCanvas()
+        {
+            Width = DefaultWidth;
+            Height = DefaultHeight;
 
-			this.ClipToBounds = true;
-
-
-			new TiledBackgroundImage(
-				(global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
-					64, 64,
-					14, 10
-			).AttachContainerTo(this);
-
-			var ShadowSize = 40;
-
-			new GameBorders(DefaultWidth, DefaultHeight, ShadowSize).AttachContainerTo(this);
-
-			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
-			new Image
-			{
-				Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
-				Width = 96,
-				Height = 96
-			}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
-
-			this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
-
-			var Content = new Canvas
-			{
-				Width = DefaultWidth,
-				Height = DefaultHeight
-			}.AttachTo(this);
-
-			var Game = default(FreeCellGame);
-			var GameFocusBoost = false;
-
-			Action CreateGame =
-				delegate
-				{
-					var PreviousGame = Game;
-
-					Game.Orphanize();
-					Game = new FreeCellGame()
-					{
-						History = History,
-					};
-
-					Game.MyDeck.Sounds = this.Sounds;
-					Game.AttachTo(Content);
-
-					var CurrentGame = Game;
-
-					this.History.History.Add(
-						delegate
-						{
-							if (Game == PreviousGame)
-								return;
-
-							Game.Orphanize();
-							Game = PreviousGame.AttachTo(Content);
-
-							if (Game == null)
-								this.Menu.Show();
-						},
-						delegate
-						{
-							if (Game == CurrentGame)
-								return;
-
-							Game.Orphanize();
-							Game = CurrentGame.AttachTo(Content);
-
-							if (Game != null)
-								this.Menu.Hide();
-						}
-					);
-				};
+            this.ClipToBounds = true;
 
 
+            new TiledBackgroundImage(
+                (global::ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.DefaultCards + "/felt.png").ToSource(),
+                    64, 64,
+                    14, 10
+            ).AttachContainerTo(this);
+
+            var ShadowSize = 40;
+
+            new GameBorders(DefaultWidth, DefaultHeight, ShadowSize).AttachContainerTo(this);
+
+            var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
+            new Image
+            {
+                Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
+                Width = 96,
+                Height = 96
+            }.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
+
+            this.History = new AeroNavigationBar().MoveContainerTo(4, 4);
+
+            var Content = new Canvas
+            {
+                Width = DefaultWidth,
+                Height = DefaultHeight
+            }.AttachTo(this);
+
+            var Game = default(FreeCellGame);
+            var GameFocusBoost = false;
+
+            Action CreateGame =
+                delegate
+                {
+                    var PreviousGame = Game;
+
+                    Game.Orphanize();
+                    Game = new FreeCellGame()
+                    {
+                        History = History,
+                    };
+
+                    Game.MyDeck.Sounds = this.Sounds;
+                    Game.AttachTo(Content);
+
+                    var CurrentGame = Game;
+
+                    this.History.History.Add(
+                        delegate
+                        {
+                            if (Game == PreviousGame)
+                                return;
+
+                            Game.Orphanize();
+                            Game = PreviousGame.AttachTo(Content);
+
+                            if (Game == null)
+                                this.Menu.Show();
+                        },
+                        delegate
+                        {
+                            if (Game == CurrentGame)
+                                return;
+
+                            Game.Orphanize();
+                            Game = CurrentGame.AttachTo(Content);
+
+                            if (Game != null)
+                                this.Menu.Hide();
+                        }
+                    );
+                };
 
 
-			new GameSocialLinks(this)
+
+
+            new GameSocialLinks(this)
 			{
 				new GameSocialLinks.Button { 
 					Source = (KnownAssets.Path.Assets + "/plus_google.png").ToSource(),
@@ -127,20 +127,20 @@ namespace AvalonCardGames.FreeCell.Shared
 				}
 			};
 
-			// redefine the ctor to fit our context
-			Func<string, string, string, GameMenu.Option> Option =
-				(Text, Image, href) =>
-					new GameMenu.Option
-					{
-						Text = "Play " + Text + "!",
-						Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
-						Hyperlink = new Uri(href),
-						MarginAfter = Math.PI / 4
-					};
+            // redefine the ctor to fit our context
+            Func<string, string, string, GameMenuOption> Option =
+                (Text, Image, href) =>
+                    new GameMenuOption
+                    {
+                        Text = "Play " + Text + "!",
+                        Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
+                        Hyperlink = new Uri(href),
+                        MarginAfter = Math.PI / 4
+                    };
 
-			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
+            this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize)
 			{
-				new GameMenu.Option
+				new GameMenuOption
 				{
 					Text = "FreeCell - medium difficulty",
 					Source = (KnownAssets.Path.Assets + "/Preview.png").ToSource(),
@@ -164,14 +164,14 @@ namespace AvalonCardGames.FreeCell.Shared
 				Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
 			};
 
-			this.Menu.ValidateHide = () => Game != null;
-			this.Menu.ValidateShow = () => !GameFocusBoost;
+            this.Menu.ValidateHide = () => Game != null;
+            this.Menu.ValidateShow = () => !GameFocusBoost;
 
-			this.Menu.AttachContainerTo(this);
+            this.Menu.AttachContainerTo(this);
 
-			this.History.AttachContainerTo(this);
+            this.History.AttachContainerTo(this);
 
-			this.Menu.Show();
-		}
-	}
+            this.Menu.Show();
+        }
+    }
 }

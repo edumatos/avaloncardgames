@@ -20,6 +20,7 @@ using ScriptCoreLib.CSharp.Avalon.Extensions;
 using ScriptCoreLib.ActionScript.flash.display;
 using ScriptCoreLib.ActionScript.Extensions;
 using ScriptCoreLib.ActionScript;
+using ScriptCoreLib.Shared.Avalon.Cards;
 
 namespace AvalonCardGames.Spider.Ultra
 {
@@ -76,13 +77,12 @@ namespace AvalonCardGames.Spider.Ultra
                 {
                     var c = new ApplicationCanvas();
 
-                    Func<string, Class> f =
-    e => KnownEmbeddedResources.Default[ScriptCoreLib.Shared.Avalon.Cards.KnownAssets.Path.Sounds + "/" + e + ".mp3"];
 
-                    var deal = f("deal");
-                    var click = f("click");
-                    var drag = f("drag");
-                    var win = f("win");
+
+                    var deal = KnownEmbeddedResources.Default[Sounds.Assets.deal];
+                    var click = KnownEmbeddedResources.Default[Sounds.Assets.click];
+                    var drag = KnownEmbeddedResources.Default[Sounds.Assets.drag];
+                    var win = KnownEmbeddedResources.Default[Sounds.Assets.win];
 
                     c.Content.Sounds.deal = () => deal.ToSoundAsset().play();
                     c.Content.Sounds.click = () => click.ToSoundAsset().play();
