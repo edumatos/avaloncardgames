@@ -7,38 +7,35 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using AvalonCardGames.Menu.Shared;
 using ScriptCoreLib;
 using ScriptCoreLib.Shared.Avalon.Cards;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using ScriptCoreLib.Shared.Avalon.Extensions;
-using ScriptCoreLib.Shared.Avalon.TiledImageButton;
 using ScriptCoreLib.Shared.Lambda;
+using AvalonCardGames.Menu.Shared;
 using Abstractatech.Avalon.Cards.Avalon.Images;
-using AvalonCardGames.AIRFreeCell.Avalon.Images;
+using AvalonCardGames.AIRSolitaire.Avalon.Images;
 
-namespace AvalonCardGames.FreeCell.Shared
+namespace AvalonCardGames.Solitaire.Shared
 {
     [Script]
-    public partial class FreeCellCanvas : Canvas
+    public class SolitaireCanvas : Canvas
     {
         public const int DefaultWidth = 800;
         public const int DefaultHeight = 600;
 
-        public AeroNavigationBar History { get; set; }
+        Preview96 ref0;
 
-        public readonly Sounds Sounds = new Sounds();
 
         public GameMenu Menu { get; set; }
+        public readonly Sounds Sounds = new Sounds();
 
-        public FreeCellCanvas()
+        public SolitaireCanvas()
         {
-            this.Width = DefaultWidth;
-            this.Height = DefaultHeight;
+            Width = DefaultWidth;
+            Height = DefaultHeight;
 
-            // is this working?
             this.ClipToBounds = true;
-
 
             new TiledBackgroundImage(
                 new felt().Source,
@@ -53,7 +50,6 @@ namespace AvalonCardGames.FreeCell.Shared
 
             new GameBorders(DefaultWidth, DefaultHeight, ShadowSize, this).AttachContainerTo(this);
 
-            var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
             //new Image
             //{
             //    Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
@@ -61,84 +57,11 @@ namespace AvalonCardGames.FreeCell.Shared
             //    Height = 96
             //}.MoveTo(DefaultWidth - 96, DefaultHeight - 96).AttachTo(this);
 
-            this.History = new AeroNavigationBar().MoveContainerTo(
-                12,
-                8
-            );
-
-            // make it bigger for android!
-            //this.History.Container.RenderTransform = new ScaleTransform(2, 2);
-
             var Content = new Canvas
             {
                 Width = DefaultWidth,
                 Height = DefaultHeight
             }.AttachTo(this);
-
-            var Game = default(FreeCellGame);
-            var GameFocusBoost = false;
-
-            Action AtSizeChanged = delegate
-            {
-                if (Game != null)
-                    Game.MoveTo(
-                        (this.Width - DefaultWidth) / 2,
-                        (this.Height - DefaultHeight)
-                    );
-            };
-
-            this.SizeChanged +=
-                delegate
-                {
-                    AtSizeChanged();
-
-
-                };
-
-            Action CreateGame =
-                delegate
-                {
-                    var PreviousGame = Game;
-
-                    Game.Orphanize();
-                    Game = new FreeCellGame()
-                    {
-                        History = History,
-                    };
-
-                    Game.MyDeck.Sounds = this.Sounds;
-                    Game.AttachTo(Content);
-
-                    AtSizeChanged();
-
-                    var CurrentGame = Game;
-
-                    this.History.History.Add(
-                        delegate
-                        {
-                            if (Game == PreviousGame)
-                                return;
-
-                            Game.Orphanize();
-                            Game = PreviousGame.AttachTo(Content);
-
-                            if (Game == null)
-                                this.Menu.Show();
-                        },
-                        delegate
-                        {
-                            if (Game == CurrentGame)
-                                return;
-
-                            Game.Orphanize();
-                            Game = CurrentGame.AttachTo(Content);
-
-                            if (Game != null)
-                                this.Menu.Hide();
-                        }
-                    );
-                };
-
 
 
             //new GameSocialLinks(this)
@@ -157,6 +80,7 @@ namespace AvalonCardGames.FreeCell.Shared
             //    }
             //};
 
+
             // redefine the ctor to fit our context
             //Func<string, string, string, GameMenuOption> Option =
             //    (Text, Image, href) =>
@@ -165,53 +89,70 @@ namespace AvalonCardGames.FreeCell.Shared
             //            Text = "Play " + Text + "!",
             //            Source = (KnownAssets.Path.SocialLinks + "/" + Image + ".png").ToSource(),
             //            Hyperlink = new Uri(href),
-            //            MarginAfter = Math.PI / 4
+            //            MarginAfter = Math.PI / 6
             //        };
 
-            this.Menu = new GameMenu((int)this.Width, DefaultHeight, ShadowSize, this)
+            var Game = default(SolitaireGame);
+            var GameFocusBoost = false;
+
+
+
+            Action AtSizeChanged = delegate
+            {
+                if (Game != null)
+                    Game.MoveTo(
+                        (this.Width - DefaultWidth) / 2,
+                        (this.Height - DefaultHeight)
+                    );
+            };
+
+            this.SizeChanged +=
+                delegate
+                {
+                    AtSizeChanged();
+
+
+                };
+
+            this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowSize, this)
 			{
 				new GameMenuOption
 				{
-					Text = "FreeCell - medium difficulty",
+					Text = "Solitaire - medium difficulty",
 					Source = new Preview().Source,
-					MarginAfter = Math.PI / 2,
+					MarginAfter = 3 * Math.PI / 6,
 					Click =
 						delegate
 						{
 							GameFocusBoost = true;
 
+							Game.Orphanize();
+							Game = new SolitaireGame().AttachTo(Content);
+							Game.MyDeck.Sounds = this.Sounds;
 
-							CreateGame();
-                            this.Menu.Hide();
+                            AtSizeChanged();
 
-							1000.AtDelay(() => GameFocusBoost = false);
+							this.Menu.Hide();
+
+					
+
+							500.AtDelay(() => GameFocusBoost = false);
 						}
 				},
+                //Option("FreeCell", "Preview_FreeCell",  "http://nonoba.com/zproxy/avalon-freecell"),
                 //Option("Spider Solitaire", "Preview_Spider",  "http://nonoba.com/zproxy/avalon-spider-solitaire"),
                 //Option("Treasure Hunt", "Preview_TreasureHunt",  "http://nonoba.com/zproxy/treasure-hunt"),
                 //Option("FlashMinesweeper:MP", "Preview_Minesweeper", "http://nonoba.com/zproxy/flashminesweepermp"),
                 //Option("Multiplayer Mahjong", "Preview_Mahjong", "http://nonoba.com/zproxy/mahjong-multiplayer"),
                 //Option("Multiplayer SpaceInvaders", "Preview_SpaceInvaders", "http://nonoba.com/zproxy/flashspaceinvaders"),
+
+				
 			};
 
             this.Menu.ValidateHide = () => Game != null;
             this.Menu.ValidateShow = () => !GameFocusBoost;
 
             this.Menu.AttachContainerTo(this);
-
-            // QA: is this working correctly for flash?
-#if DEBUG
-            var HistoryNoZone = new Rectangle();
-
-            HistoryNoZone.Fill = Brushes.Yellow;
-
-            HistoryNoZone.Width = 96;
-            HistoryNoZone.Height = 48;
-            HistoryNoZone.Opacity = 0;
-            HistoryNoZone.AttachTo(this);
-
-            this.History.AttachContainerTo(this);
-#endif
 
             this.Menu.Show();
         }
