@@ -146,8 +146,21 @@
     <Compile Include="Program.cs">
       <DependentUpon>ApplicationCanvas.cs</DependentUpon>
     </Compile>
+    <Content Include="staging\AvalonCardGames.AIRFreeCell.ApplicationSprite\web\air.com.abstractatech.gamification.freecell.xml" />
+    <Content Include="Textures\jsc.png" />
+    <Content Include="Textures\kingbitm.png" />
+    <Content Include="Textures\kingleft.png" />
+    <Content Include="Textures\kingsmil.png" />
+    <Content Include="Textures\plus_google.png" />
+    <Content Include="Textures\Preview.png" />
+    <Content Include="Textures\Screenshot.png" />
+    <Content Include="Textures\su.png" />
+    <Content Include="Textures\x100.png" />
+    <Content Include="Textures\x46.gif" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AIR\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
@@ -161,7 +174,9 @@
   <PropertyGroup>
     <PostBuildEvent>
 if $(ConfigurationName)==Release (
-rem start /MIN /WAIT cmd /C c:\util\jsc\bin\jsc.meta.exe RewriteToJavaScriptDocument /assembly:"$(TargetFileName)" /AttachDebugger:false  /DisableWebServiceJava:true /DisableWebServicePHP:true /DisableWebServiceAndroid:true
+start /MIN /WAIT cmd /C c:\util\jsc\bin\jsc.meta.exe RewriteToJavaScriptDocument /assembly:"$(TargetFileName)" /AttachDebugger:false  /DisableWebServiceJava:true /DisableWebServicePHP:true /DisableWebServiceAndroid:true
+
+
 )</PostBuildEvent>
     <PreBuildEvent>
 

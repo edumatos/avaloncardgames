@@ -14,411 +14,399 @@ using ScriptCoreLib.Shared.Avalon.Extensions;
 using ScriptCoreLib.Shared.Lambda;
 using ScriptCoreLib.Shared.Avalon.TiledImageButton;
 using AvalonCardGames.Menu.Shared;
+using AvalonCardGames.AIRFreeCell.Avalon.Images;
 
 namespace AvalonCardGames.FreeCell.Shared
 {
-	[Script]
-	public partial class FreeCellGame : Canvas
-	{
-		public const int DefaultWidth = 800;
-		public const int DefaultHeight = 600;
-
-		public AeroNavigationBar History { get; set; }
-
-		public readonly CardDeck MyDeck = new CardDeck
-		{
-		};
-
-		BindingList<CardStack> TempStacks;
-		BindingList<CardStack> GoalStacks;
-		BindingList<CardStack> PlayStacks;
-
-		readonly StatusControl MyStatus;
-		public event Action GameOver;
-
-
-		public bool Cheat = false;
-
-		public FreeCellGame()
-		{
-			Width = DefaultWidth;
-			Height = DefaultHeight;
-
-
-			var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
-
-			var GameOverBox = new TextBox
-			{
-				Width = DefaultWidth,
-				TextAlignment = System.Windows.TextAlignment.Center,
-				Foreground = Brushes.White,
-				Background = Brushes.Transparent,
-				BorderThickness = new Thickness(0),
-				IsReadOnly = true,
-				FontSize = 24,
-			}.MoveTo(0, DefaultHeight / 2).AttachTo(this);
-
-			GameOver += delegate
-			{
-				GameOverBox.Text = "Congratulations! You Won!";
-			};
-
-			#region king
-			var KingCanvas = new Canvas
-			{
-				Width = 96,
-				Height = 96
-			}.AttachTo(this).MoveTo(
-				(DefaultWidth - 32) / 2,
-				Margin * 2 + (CardInfo.Height - 32) / 2
-			);
-
-			var KingRight = new Image
-			{
-				Source = (KnownAssets.Path.Assets + "/kingbitm.png").ToSource(),
-				Width = 32,
-				Height = 32
-			}.AttachTo(KingCanvas);
-
-			var KingLeft = new Image
-			{
-				Source = (KnownAssets.Path.Assets + "/kingleft.png").ToSource(),
-				Width = 32,
-				Height = 32
-			}.AttachTo(KingCanvas);
-
-			var KingSmile = new Image
-			{
-				Source = (KnownAssets.Path.Assets + "/kingsmil.png").ToSource(),
-				Width = 32,
-				Height = 32,
-				Visibility = Visibility.Hidden
-			}.AttachTo(KingCanvas);
-			#endregion
-
-			this.MyDeck.Overlay.MouseMove +=
-				(sender, args) =>
-				{
-					var p = args.GetPosition(this.MyDeck.Overlay);
-
-					if (p.X < DefaultWidth / 2)
-					{
-						KingLeft.Show();
-						KingRight.Hide();
-					}
-					else
-					{
-						KingLeft.Hide();
-						KingRight.Show();
-					}
-				};
-
-			this.MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
-				(DefaultWidth - StatusControl.Width) / 2,
-				(DefaultHeight - StatusControl.Height)
-			);
-
+    [Script]
+    public partial class FreeCellGame : Canvas
+    {
+        public const int DefaultWidth = 800;
+        public const int DefaultHeight = 600;
 
+        public AeroNavigationBar History { get; set; }
 
-			//this.MyStatus.Container.Hide();
+        public readonly CardDeck MyDeck = new CardDeck
+        {
+        };
 
-			// add autoscroll ?
-			this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);
-			this.MyDeck.AttachContainerTo(this);
-			this.MyDeck.GetRank = e => (int)RankMapping[e];
+        BindingList<CardStack> TempStacks;
+        BindingList<CardStack> GoalStacks;
+        BindingList<CardStack> PlayStacks;
 
-			System.Console.WriteLine("--- freecell ---");
+        readonly StatusControl MyStatus;
+        public event Action GameOver;
 
-			System.Console.WriteLine("adding card infos... ");
 
-			MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
+        public bool Cheat = false;
 
-			this.MyStatus.CardsLeft = MyDeck.UnusedCards.Count;
-			this.MyStatus.Score = -1;
-			this.MyStatus.Update();
+        public FreeCellGame()
+        {
+            Width = DefaultWidth;
+            Height = DefaultHeight;
 
-			System.Console.WriteLine("creating stacklists... ");
 
-			PlayStacks = MyDeck.CreateStackList();
-			PlayStacks.ForEachNewItem(
-				k =>
-				{
-					k.CardMargin = new Vector { Y = 20 };
-					k.Update();
-				}
-			);
+            var Margin = (DefaultWidth - CardInfo.Width * 8) / 9;
 
-			TempStacks = MyDeck.CreateStackList();
+            var GameOverBox = new TextBox
+            {
+                Width = DefaultWidth,
+                TextAlignment = System.Windows.TextAlignment.Center,
+                Foreground = Brushes.White,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                IsReadOnly = true,
+                FontSize = 24,
+            }.MoveTo(0, DefaultHeight / 2).AttachTo(this);
 
-			Func<bool> Rule_WinConditionMet =
-				delegate
-				{
-					if (PlayStacks.All(s => s.Cards.Count > 0))
-						return false;
+            GameOver += delegate
+            {
+                GameOverBox.Text = "Congratulations! You Won!";
+            };
 
-					if (TempStacks.All(s => s.Cards.Count == 0))
-						return false;
+            #region king
+            var KingCanvas = new Canvas
+            {
+                Width = 96,
+                Height = 96
+            }.AttachTo(this).MoveTo(
+                (DefaultWidth - 32) / 2,
+                Margin * 2 + (CardInfo.Height - 32) / 2
+            );
 
-					return true;
-				};
+            var KingRight = new kingbitm().AttachTo(KingCanvas);
 
-			Action MyStatus_UpdateCardsLeft =
-				delegate
-				{
+            var KingLeft = new kingleft().AttachTo(KingCanvas);
 
-					MyStatus.CardsLeft = 0;
+            var KingSmile = new kingsmil().AttachTo(KingCanvas);
 
-					PlayStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count); 
-					TempStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count); 
-				};
+            KingSmile.Hide();
 
-			GoalStacks = MyDeck.CreateStackList();
-			GoalStacks.ForEachNewItem(
-				k =>
-				{
+            #endregion
 
-					k.CardMargin = new Vector();
-					k.Cards.ForEachNewItem(
-						card =>
-						{
+            this.MyDeck.Overlay.MouseMove +=
+                (sender, args) =>
+                {
+                    var p = args.GetPosition(this.MyDeck.Overlay);
 
-							if (card.Info.Rank == CardInfo.RankEnum.RankKing)
-							{
-								KingSmile.Show();
+                    if (p.X < DefaultWidth / 2)
+                    {
+                        KingLeft.Show();
+                        KingRight.Hide();
+                    }
+                    else
+                    {
+                        KingLeft.Hide();
+                        KingRight.Show();
+                    }
+                };
 
-								card.VisibleSide = Card.SideEnum.BackSide;
+            this.MyStatus = new StatusControl().AttachContainerTo(this).MoveContainerTo(
+                (DefaultWidth - StatusControl.Width) / 2,
+                (DefaultHeight - StatusControl.Height)
+            );
 
 
-								if (Rule_WinConditionMet())
-								{
-									// winner!
-									MyDeck.Sounds.win();
 
-									if (this.GameOver != null)
-										this.GameOver();
-								}
-								else
-								{
-									600.AtDelay(KingSmile.Hide);
-								}
-							}
+            //this.MyStatus.Container.Hide();
 
+            // add autoscroll ?
+            this.MyDeck.SizeTo(DefaultWidth, DefaultHeight);
+            this.MyDeck.AttachContainerTo(this);
+            this.MyDeck.GetRank = e => (int)RankMapping[e];
 
-							MyStatus_UpdateCardsLeft();
-							MyStatus.Update();
-						}
-					);
-				}
-			);
+            System.Console.WriteLine("--- freecell ---");
 
-			Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
-				(Previous, Current) =>
-				{
-					if (Cheat)
-						return true;
+            System.Console.WriteLine("adding card infos... ");
 
-					if (Previous == null)
-						return Current.Info.Rank == CardInfo.RankEnum.RankAce;
+            MyDeck.UnusedCards.AddRange(CardInfo.FullDeck());
 
-					if (Previous.Info.Suit != Current.Info.Suit)
-						return false;
+            this.MyStatus.CardsLeft = MyDeck.UnusedCards.Count;
+            this.MyStatus.Score = -1;
+            this.MyStatus.Update();
 
-					if (Previous.Rank != Current.Rank + 1)
-						return false;
+            System.Console.WriteLine("creating stacklists... ");
 
-					return true;
-				};
+            PlayStacks = MyDeck.CreateStackList();
+            PlayStacks.ForEachNewItem(
+                k =>
+                {
+                    k.CardMargin = new Vector { Y = 20 };
+                    k.Update();
+                }
+            );
 
-			Func<Card, Card, bool> RuleForStackingCardsInPlayStack =
-				(Previous, Current) =>
-				{
-					if (Cheat)
-						return true;
+            TempStacks = MyDeck.CreateStackList();
 
-					if (Previous.Info.SuitColor == Current.Info.SuitColor)
-						return false;
+            Func<bool> Rule_WinConditionMet =
+                delegate
+                {
+                    if (PlayStacks.All(s => s.Cards.Count > 0))
+                        return false;
 
-					if (Previous.Rank + 1 != Current.Rank)
-						return false;
+                    if (TempStacks.All(s => s.Cards.Count == 0))
+                        return false;
 
-					return true;
-				};
+                    return true;
+                };
 
+            Action MyStatus_UpdateCardsLeft =
+                delegate
+                {
 
-			#region rules
-			MyDeck.ApplyCardRules += delegate(Card card)
-			{
+                    MyStatus.CardsLeft = 0;
 
-				#region MovedByLocalPlayer
-				card.MovedByLocalPlayer +=
-					delegate
-					{
-						var FrozenTokens = new
-						{
-							card.CurrentStack,
-							card.PreviousStack
-						};
+                    PlayStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count);
+                    TempStacks.ForEach(q => MyStatus.CardsLeft += q.Cards.Count);
+                };
 
-						Console.WriteLine(new { HistoryMove = card, StackedCards = card.StackedCards.Length, Previous = card.PreviousStack, Current = card.CurrentStack }.ToString());
+            GoalStacks = MyDeck.CreateStackList();
+            GoalStacks.ForEachNewItem(
+                k =>
+                {
 
-						History.History.Add(
-							delegate
-							{
-								
+                    k.CardMargin = new Vector();
+                    k.Cards.ForEachNewItem(
+                        card =>
+                        {
 
-								// we already are at the state we want to be
-								if (card.CurrentStack == FrozenTokens.PreviousStack)
-									return;
+                            if (card.Info.Rank == CardInfo.RankEnum.RankKing)
+                            {
+                                KingSmile.Show();
 
-								card.VisibleSide = Card.SideEnum.TopSide;
-								card.AnimatedMoveToStack(FrozenTokens.PreviousStack, null);
+                                card.VisibleSide = Card.SideEnum.BackSide;
 
 
-								this.MyDeck.Sounds.deal();
+                                if (Rule_WinConditionMet())
+                                {
+                                    // winner!
+                                    MyDeck.Sounds.win();
 
-								MyStatus.Moves--;
-								MyStatus_UpdateCardsLeft();
-								MyStatus.Update();
-							},
-							delegate
-							{
-								MyStatus.Moves++;
-								MyStatus.Update();
+                                    if (this.GameOver != null)
+                                        this.GameOver();
+                                }
+                                else
+                                {
+                                    600.AtDelay(KingSmile.Hide);
+                                }
+                            }
 
-								// we already are at the state we want to be
-								if (card.CurrentStack == FrozenTokens.CurrentStack)
-									return;
 
+                            MyStatus_UpdateCardsLeft();
+                            MyStatus.Update();
+                        }
+                    );
+                }
+            );
 
+            Func<Card, Card, bool> RuleForStackingCardsInGoalStack =
+                (Previous, Current) =>
+                {
+                    if (Cheat)
+                        return true;
 
-								card.AnimatedMoveToStack(FrozenTokens.CurrentStack, null);
-								this.MyDeck.Sounds.deal();
+                    if (Previous == null)
+                        return Current.Info.Rank == CardInfo.RankEnum.RankAce;
 
+                    if (Previous.Info.Suit != Current.Info.Suit)
+                        return false;
 
-								
-							}
-						);
-					};
-				#endregion
+                    if (Previous.Rank != Current.Rank + 1)
+                        return false;
 
+                    return true;
+                };
 
-				card.VisibleSide = Card.SideEnum.TopSide;
+            Func<Card, Card, bool> RuleForStackingCardsInPlayStack =
+                (Previous, Current) =>
+                {
+                    if (Cheat)
+                        return true;
 
-				card.ValidateDragStart =
-					delegate
-					{
-						if (Cheat)
-							return true;
+                    if (Previous.Info.SuitColor == Current.Info.SuitColor)
+                        return false;
 
-						// cannot remove cards from goal stack
-						if (GoalStacks.Contains(card))
-							return false;
+                    if (Previous.Rank + 1 != Current.Rank)
+                        return false;
 
-						// cannot drag a pile of cards unless alternate colors and descending numbers
-						return card.SelectedCards.AllWithPrevious(RuleForStackingCardsInPlayStack);
-					};
+                    return true;
+                };
 
-				card.ValidateDragStop =
-					CandidateStack =>
-					{
-						if (Cheat)
-							return true;
 
-						if (TempStacks.Contains(CandidateStack))
-						{
-							// temp only holds one card
-							if (CandidateStack.Cards.Count > 0)
-								return false;
+            #region rules
+            MyDeck.ApplyCardRules += delegate(Card card)
+            {
 
-							// and only one card can be inserted
-							if (card.StackedCards.Length > 0)
-								return false;
+                #region MovedByLocalPlayer
+                card.MovedByLocalPlayer +=
+                    delegate
+                    {
+                        var FrozenTokens = new
+                        {
+                            card.CurrentStack,
+                            card.PreviousStack
+                        };
 
-							return true;
-						}
+                        Console.WriteLine(new { HistoryMove = card, StackedCards = card.StackedCards.Length, Previous = card.PreviousStack, Current = card.CurrentStack }.ToString());
 
-						if (PlayStacks.Contains(CandidateStack))
-						{
-							if (CandidateStack.Cards.Count == 0)
-								return true;
+                        History.History.Add(
+                            delegate
+                            {
 
 
-							return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
-						}
+                                // we already are at the state we want to be
+                                if (card.CurrentStack == FrozenTokens.PreviousStack)
+                                    return;
 
-						if (GoalStacks.Contains(CandidateStack))
-						{
-							if (CandidateStack.Cards.Count == 0)
-							{
+                                card.VisibleSide = Card.SideEnum.TopSide;
+                                card.AnimatedMoveToStack(FrozenTokens.PreviousStack, null);
 
-								return (RuleForStackingCardsInGoalStack(null, card));
-							}
 
-							return (RuleForStackingCardsInGoalStack(CandidateStack.Cards.Last(), card));
+                                this.MyDeck.Sounds.deal();
 
-						}
+                                MyStatus.Moves--;
+                                MyStatus_UpdateCardsLeft();
+                                MyStatus.Update();
+                            },
+                            delegate
+                            {
+                                MyStatus.Moves++;
+                                MyStatus.Update();
 
-						return false;
-					};
-			};
-			#endregion
+                                // we already are at the state we want to be
+                                if (card.CurrentStack == FrozenTokens.CurrentStack)
+                                    return;
 
 
-			System.Console.WriteLine("creating goalstack... ");
 
+                                card.AnimatedMoveToStack(FrozenTokens.CurrentStack, null);
+                                this.MyDeck.Sounds.deal();
 
-			GoalStacks.AddRange(
-				Enumerable.Range(0, 4).ToArray(
-					i =>
-						new CardStack
-						{
-							Name = "GoalStack " + i
-						}.MoveTo(
-							DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2),
-							Margin * 2
-						)
-				)
-			);
 
-			System.Console.WriteLine("creating tempstack... ");
 
+                            }
+                        );
+                    };
+                #endregion
 
-			TempStacks.AddRange(
-				Enumerable.Range(0, 4).ToArray(
-					i => new CardStack
-					{
-						Name = "TempStack " + i
-					}.MoveTo(
-						Margin + i * (CardInfo.Width + Margin / 2),
-						Margin * 2
-					)
-				)
-			);
 
-			System.Console.WriteLine("creating playstack... ");
+                card.VisibleSide = Card.SideEnum.TopSide;
 
-			PlayStacks.AddRange(
-				Enumerable.Range(0, 8).ToArray(
-					i => new CardStack
-					{
-						Name = "PlayStack " + i
-					}.MoveTo(
-						Margin + (i) * (CardInfo.Width + Margin),
-						Margin * 4 + CardInfo.Height
-					).Apply(
-						s =>
-						{
-							var Count = 6;
+                card.ValidateDragStart =
+                    delegate
+                    {
+                        if (Cheat)
+                            return true;
 
-							if (i < 4)
-								Count = 7;
+                        // cannot remove cards from goal stack
+                        if (GoalStacks.Contains(card))
+                            return false;
 
-							s.Cards.AddRange(MyDeck.FetchCards(Count));
-						}
-					)
-				)
-			);
+                        // cannot drag a pile of cards unless alternate colors and descending numbers
+                        return card.SelectedCards.AllWithPrevious(RuleForStackingCardsInPlayStack);
+                    };
 
-		}
-	}
+                card.ValidateDragStop =
+                    CandidateStack =>
+                    {
+                        if (Cheat)
+                            return true;
+
+                        if (TempStacks.Contains(CandidateStack))
+                        {
+                            // temp only holds one card
+                            if (CandidateStack.Cards.Count > 0)
+                                return false;
+
+                            // and only one card can be inserted
+                            if (card.StackedCards.Length > 0)
+                                return false;
+
+                            return true;
+                        }
+
+                        if (PlayStacks.Contains(CandidateStack))
+                        {
+                            if (CandidateStack.Cards.Count == 0)
+                                return true;
+
+
+                            return (RuleForStackingCardsInPlayStack(CandidateStack.Cards.Last(), card));
+                        }
+
+                        if (GoalStacks.Contains(CandidateStack))
+                        {
+                            if (CandidateStack.Cards.Count == 0)
+                            {
+
+                                return (RuleForStackingCardsInGoalStack(null, card));
+                            }
+
+                            return (RuleForStackingCardsInGoalStack(CandidateStack.Cards.Last(), card));
+
+                        }
+
+                        return false;
+                    };
+            };
+            #endregion
+
+
+            System.Console.WriteLine("creating goalstack... ");
+
+
+            GoalStacks.AddRange(
+                Enumerable.Range(0, 4).ToArray(
+                    i =>
+                        new CardStack
+                        {
+                            Name = "GoalStack " + i
+                        }.MoveTo(
+                            DefaultWidth - Margin / 2 - ((CardInfo.Width + Margin / 2) * 4) + i * (CardInfo.Width + Margin / 2),
+                            Margin * 2
+                        )
+                )
+            );
+
+            System.Console.WriteLine("creating tempstack... ");
+
+
+            TempStacks.AddRange(
+                Enumerable.Range(0, 4).ToArray(
+                    i => new CardStack
+                    {
+                        Name = "TempStack " + i
+                    }.MoveTo(
+                        Margin + i * (CardInfo.Width + Margin / 2),
+                        Margin * 2
+                    )
+                )
+            );
+
+            System.Console.WriteLine("creating playstack... ");
+
+            PlayStacks.AddRange(
+                Enumerable.Range(0, 8).ToArray(
+                    i => new CardStack
+                    {
+                        Name = "PlayStack " + i
+                    }.MoveTo(
+                        Margin + (i) * (CardInfo.Width + Margin),
+                        Margin * 4 + CardInfo.Height
+                    ).Apply(
+                        s =>
+                        {
+                            var Count = 6;
+
+                            if (i < 4)
+                                Count = 7;
+
+                            s.Cards.AddRange(MyDeck.FetchCards(Count));
+                        }
+                    )
+                )
+            );
+
+        }
+    }
 }

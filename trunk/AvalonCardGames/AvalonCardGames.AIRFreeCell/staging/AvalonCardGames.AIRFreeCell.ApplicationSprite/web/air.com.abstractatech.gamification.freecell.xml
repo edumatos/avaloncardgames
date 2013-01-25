@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/3.0">
+  <id>com.abstractatech.gamification.freecell</id>
+  <versionNumber>1.0.1</versionNumber>
+  <filename>Avalon FreeCell</filename>
+  <name>Avalon FreeCell</name>
+  <description>
+    <text xml:lang="en">Avalon FreeCell</text>
+  </description>
+  <copyright>abstractatech.com</copyright>
+  <initialWindow>
+    <title>Avalon FreeCell</title>
+    <content>
+      AvalonCardGames.AIRFreeCell.ApplicationSprite.swf
+    </content>
+
+    <autoOrients>false</autoOrients>
+    <renderMode>direct</renderMode>
+    <fullScreen>false</fullScreen>
+    <visible>true</visible>
+    <aspectRatio>landscape</aspectRatio>
+
+  </initialWindow>
+  <icon>
+
+
+  </icon>
+
+
+</application>
