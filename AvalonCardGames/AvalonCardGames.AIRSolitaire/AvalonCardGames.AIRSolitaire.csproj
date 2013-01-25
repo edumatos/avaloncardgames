@@ -142,22 +142,27 @@
     <Compile Include="Program.cs">
       <DependentUpon>ApplicationCanvas.cs</DependentUpon>
     </Compile>
-    <Content Include="staging\AvalonCardGames.AIRSolitaire\web\air.com.abstractatech.gamification.solitaire.xml">
+    <Content Include="Promotion\Preview.png" />
+    <Content Include="Promotion\Preview128.png" />
+    <Content Include="Promotion\Preview512.png" />
+    <Content Include="staging\AvalonCardGames.AIRSolitaire.ApplicationSprite\web\air.com.abstractatech.gamification.solitaire.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Textures\Preview.png" />
+    <Content Include="Textures\Preview120x90.png" />
     <Content Include="Textures\Preview96.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="staging\AvalonCardGames.AIRSolitaire\web\air.com.abstractatech.gamification.solitaire-build.bat">
+    <None Include="staging\AvalonCardGames.AIRSolitaire.ApplicationSprite\web\air.com.abstractatech.gamification.solitaire-build.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="staging\AvalonCardGames.AIRSolitaire\web\air.com.abstractatech.gamification.solitaire-install.bat">
+    <None Include="staging\AvalonCardGames.AIRSolitaire.ApplicationSprite\web\air.com.abstractatech.gamification.solitaire-install.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="staging\AvalonCardGames.AIRSolitaire\web\air.com.abstractatech.gamification.solitaire-test.bat" />
+    <None Include="staging\AvalonCardGames.AIRSolitaire.ApplicationSprite\web\air.com.abstractatech.gamification.solitaire-test.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AvalonCardGames.Menu\AvalonCardGames.Menu.csproj">
