@@ -8,21 +8,21 @@ using System.Windows.Controls;
 using AvalonCardGames.Menu.Shared;
 using ScriptCoreLib.Shared.Avalon.Controls;
 using AvalonCardGames.Spider.Shared;
-using AvalonCardGames.Spider.Ultra.Avalon.Images;
 using Abstractatech.Avalon.Cards.Avalon.Images;
+using AvalonCardGames.AIRSpider.Avalon.Images;
 
 namespace AvalonCardGames.Spider.Ultra.Code
 {
-	public partial class SpiderCanvas : Canvas
-	{
-		public const int DefaultWidth = 800;
-		public const int DefaultHeight = 600;
+    public partial class SpiderCanvas : Canvas
+    {
+        public const int DefaultWidth = 800;
+        public const int DefaultHeight = 600;
 
 
 
 
-		#region levels
-		static CardInfo.SuitEnum[] LevelEasy = new CardInfo.SuitEnum[]
+        #region levels
+        static CardInfo.SuitEnum[] LevelEasy = new CardInfo.SuitEnum[]
             {
                 CardInfo.SuitEnum.Club,
                 CardInfo.SuitEnum.Club,
@@ -30,7 +30,7 @@ namespace AvalonCardGames.Spider.Ultra.Code
                 CardInfo.SuitEnum.Club,
             };
 
-		static CardInfo.SuitEnum[] LevelMedium = new CardInfo.SuitEnum[]
+        static CardInfo.SuitEnum[] LevelMedium = new CardInfo.SuitEnum[]
             {
                 CardInfo.SuitEnum.Club,
                 CardInfo.SuitEnum.Heart,
@@ -38,42 +38,44 @@ namespace AvalonCardGames.Spider.Ultra.Code
                 CardInfo.SuitEnum.Heart,
             };
 
-		static CardInfo.SuitEnum[] LevelHard = new CardInfo.SuitEnum[]
+        static CardInfo.SuitEnum[] LevelHard = new CardInfo.SuitEnum[]
             {
                 CardInfo.SuitEnum.Club,
                 CardInfo.SuitEnum.Heart,
                 CardInfo.SuitEnum.Spade,
                 CardInfo.SuitEnum.Diamond,
             };
-		#endregion
+        #endregion
 
 
 
-		public Sounds Sounds = new Sounds();
+        public Sounds Sounds = new Sounds();
 
-		public GameMenu Menu { get; set; }
+        public GameMenu Menu { get; set; }
 
-		public SpiderCanvas()
-		{
-			Width = DefaultWidth;
-			Height = DefaultHeight;
+        public SpiderCanvas()
+        {
+            Width = DefaultWidth;
+            Height = DefaultHeight;
 
-			this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
+            //this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
 
 
             new TiledBackgroundImage(
-                new felt().Source
-                ,
-                    64, 64,
-                    14, 10
-            ).AttachContainerTo(this);
+                   new felt().Source,
+                       64, 64,
 
-			var ShadowHeight = 40;
+                       // repeaters
+                       x: 32,
+                       y: 24
+               ).AttachContainerTo(this);
 
-			new GameBorders(DefaultWidth, DefaultHeight, ShadowHeight).AttachContainerTo(this);
+            var ShadowHeight = 40;
+
+            new GameBorders(DefaultWidth, DefaultHeight, ShadowHeight, this).AttachContainerTo(this);
 
 
-			var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
+            var Margin = (DefaultWidth - CardInfo.Width * 10) / 11;
             //new Image
             //{
             //    Source = (KnownAssets.Path.Assets + "/jsc.png").ToSource(),
@@ -81,16 +83,16 @@ namespace AvalonCardGames.Spider.Ultra.Code
             //    Height = 96
             //}.MoveTo(DefaultWidth - 96, DefaultHeight - 96 - 17 - Margin).AttachTo(this);
 
-			var Content = new Canvas
-			{
-				Width = DefaultWidth,
-				Height = DefaultHeight
-			}.AttachTo(this);
+            var Content = new Canvas
+            {
+                Width = DefaultWidth,
+                Height = DefaultHeight
+            }.AttachTo(this);
 
 
-			var Game = default(SpiderGame);
+            var Game = default(SpiderGame);
 
-			var GameFocusBoost = false;
+            var GameFocusBoost = false;
 
 
             //new GameSocialLinks(this)
@@ -109,9 +111,9 @@ namespace AvalonCardGames.Spider.Ultra.Code
             //    }
             //};
 
-			// Select a difficulty for a new game!
+            // Select a difficulty for a new game!
 
-			// redefine the ctor to fit our context
+            // redefine the ctor to fit our context
             //Func<string, string, string, GameMenu.Option> Option =
             //    (Text, Image, href) =>
             //        new GameMenu.Option
@@ -122,30 +124,49 @@ namespace AvalonCardGames.Spider.Ultra.Code
             //            MarginAfter = Math.PI / 4
             //        };
 
-			Func<string, Image, Func<SpiderGame>, GameMenuOption> Level =
-				(Text, Image, ctor) =>
-					new GameMenuOption
-					{
-						Text = Text,
-						Source =  Image.Source,
-						MarginAfter = Math.PI / 4,
-						Click =
-							delegate
-							{
-								GameFocusBoost = true;
+            Action AtSizeChanged = delegate
+            {
+                if (Game != null)
+                    Game.MoveTo(
+                        (this.Width - DefaultWidth) / 2,
+                        (this.Height - DefaultHeight)
+                    );
+            };
 
-								Game.Orphanize();
-								Game = ctor();
-								Game.AttachTo(Content);
-								Game.MyDeck.Sounds = Sounds;
+            this.SizeChanged +=
+                delegate
+                {
+                    AtSizeChanged();
 
-								Menu.Hide();
 
-								500.AtDelay(() => GameFocusBoost = false);
-							}
-					};
+                };
 
-			this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowHeight)
+            Func<string, Image, Func<SpiderGame>, GameMenuOption> Level =
+                (Text, Image, ctor) =>
+                    new GameMenuOption
+                    {
+                        Text = Text,
+                        Source = Image.Source,
+                        MarginAfter = Math.PI / 4,
+                        Click =
+                            delegate
+                            {
+                                GameFocusBoost = true;
+
+                                Game.Orphanize();
+                                Game = ctor();
+                                Game.AttachTo(Content);
+                                Game.MyDeck.Sounds = Sounds;
+
+                                AtSizeChanged();
+
+                                Menu.Hide();
+
+                                500.AtDelay(() => GameFocusBoost = false);
+                            }
+                    };
+
+            this.Menu = new GameMenu(DefaultWidth, DefaultHeight, ShadowHeight, this)
 			{
 				Level("Play easy Spider Solitaire!", new PreviewEasy(), () =>  new SpiderGame(LevelEasy)),
 				Level("Play medium Spider Solitaire!", new PreviewMedium(), () =>  new SpiderGame(LevelMedium)),
@@ -160,19 +181,19 @@ namespace AvalonCardGames.Spider.Ultra.Code
 
 			};
 
-			Menu.AttachContainerTo(this);
+            Menu.AttachContainerTo(this);
 
 
-			Menu.ValidateHide = () => Game != null;
-			Menu.ValidateShow = () => !GameFocusBoost;
+            Menu.ValidateHide = () => Game != null;
+            Menu.ValidateShow = () => !GameFocusBoost;
 
 
-			Menu.Show();
+            Menu.Show();
 
-		}
-
-
+        }
 
 
-	}
+
+
+    }
 }
