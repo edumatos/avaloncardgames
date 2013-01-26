@@ -43,7 +43,7 @@ namespace AvalonCardGames.Spider.Shared
             Width = DefaultWidth;
             Height = DefaultHeight;
 
-            this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
+            //this.ClipTo(0, 0, DefaultWidth, DefaultHeight);
 
             var GameOverBox = new TextBox
             {
