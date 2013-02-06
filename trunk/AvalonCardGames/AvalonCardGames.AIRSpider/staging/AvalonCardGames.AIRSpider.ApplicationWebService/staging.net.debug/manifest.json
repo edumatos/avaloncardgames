@@ -1,0 +1,30 @@
+{
+"manifest_version": 2,
+  "name": "Avalone Spider Solitaire",
+  "description": "Avalone Spider Solitaire",
+  "version": "1",
+  "app": {
+
+
+    "launch": {
+      "local_path": "index.htm",
+      "container": "panel"
+    }
+  },
+  "icons": {
+    "16": "ChromePreview16.png"
+    "128": "ChromePreview128.png"
+  },
+  
+  
+  "content_security_policy": "script-src 'unsafe-eval' 'self' ; object-src 'self'  'unsafe-eval'" ,
+  
+  
+  "permissions": [
+    "unlimitedStorage",
+    "notifications",
+    "background"
+  ]
+  
+
+}

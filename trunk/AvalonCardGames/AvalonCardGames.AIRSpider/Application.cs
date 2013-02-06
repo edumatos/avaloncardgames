@@ -1,4 +1,3 @@
-using AvalonCardGames.AIRSpider.Design;
 using AvalonCardGames.AIRSpider.HTML.Pages;
 using ScriptCoreLib;
 using ScriptCoreLib.Delegates;
@@ -32,12 +31,13 @@ namespace AvalonCardGames.AIRSpider
         {
             sprite.AutoSizeSpriteTo(page.ContentSize);
             sprite.AttachSpriteTo(page.Content);
-            @"Hello world".ToDocumentTitle();
+
+            @"Avalon Spider Solitaire".ToDocumentTitle();
             // Send data from JavaScript to the server tier
-            service.WebMethod2(
-                @"A string from JavaScript.",
-                value => value.ToDocumentTitle()
-            );
+            //service.WebMethod2(
+            //    @"A string from JavaScript.",
+            //    value => value.ToDocumentTitle()
+            //);
         }
 
     }
