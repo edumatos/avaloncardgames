@@ -1,8 +1,10 @@
 {
 "manifest_version": 2,
-  "name": "Avalone Spider Solitaire",
-  "description": "Avalone Spider Solitaire",
-  "version": "1",
+  "name": "Avalon Spider Solitaire",
+  "description": "Avalon Spider Solitaire",
+  "version": "2",
+  "minimum_chrome_version": "23.0.1261",
+  "offline_enabled": true,
   "app": {
 
 
@@ -12,7 +14,7 @@
     }
   },
   "icons": {
-    "16": "ChromePreview16.png"
+    "16": "ChromePreview16.png",
     "128": "ChromePreview128.png"
   },
   
